@@ -1,0 +1,50 @@
+{% load static %}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">Registro de Usuario</h4>
+</div>
+
+<div class="modal-body">
+    <div class="container">      
+        <div class="row">
+            <div class="col-xs-12 col-sm-9 col-md-7 col-lg-6">       
+                <form role="form" method="post" id="form-registro-usuario" action="/guardar-formulario-registro/" onsubmit="return validar_registro_usuario()">{% csrf_token %}
+                    
+                    <input name="id_user" type="hidden" value="{{ user.id }}">
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="cedula" id="cedula" maxlength="8" required value="{{ user.cedula }}" onkeypress="return permite(event, 'num')"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="nombre" maxlength="20" required value="{{ user.nombre }}" onkeypress="return permite(event, 'car')"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="apellido" maxlength="20" required placeholder="Apellido" value="{{ user.apellido }}" onkeypress="return permite(event, 'car')"/>
+                    </div>                    
+
+                    <div class="form-group">
+                        <input type="email" class="form-control" name="email" maxlength="50" required placeholder="Correo Electronico" value="{{ user.email }}" onkeypress="return permite(event, 'num_car')"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" id="inputPassword" maxlength="25" required placeholder="Ingresa tu clave" onkeypress="return permite(event, 'num_car')"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="passwordConfirma" id="inputPasswordConfirma" maxlength="25" required placeholder="Confirma tu clave" onkeypress="return permite(event, 'num_car')"/>
+                    </div>
+
+                    <div id="resultado_form_invalido"></div>
+                    
+                    <div class="form-group">  
+                        <div class="col-xs-12">                      
+                            <button type="submit" class="btn btn-primary btn-md btn-block">Registrarme</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>    
+</div>

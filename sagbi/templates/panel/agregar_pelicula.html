@@ -1,0 +1,95 @@
+{% extends "panel/base.html" %}
+{% load static %}
+
+{% block contenido %}
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Peliculas</h1>
+
+                <br>
+                <div class="pull-right">
+                    <a href="#registrate" data-toggle="modal" class="texto_agregar text-right"><i class="fa fa-plus-circle fa-fw"></i> Agregar Pelicula</a>
+                </div>
+                <br><br><br>
+
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover texto_medio">
+                                <thead>
+                                    <tr>
+                                        <th><b>N°</b></th>
+                                        <th><b>Pelicula</b></th>
+                                        <th><b>Acción</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>The Matrix</td>
+                                        <td>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;<a data-toggle="modal" data-target="#modificar" href="/modificar-pais/{{ pais.id }}/"><i class="fa fa-edit fa-lg"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal fade" id="registrate" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" id="modal-box">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Valida tus datos</h4>
+                                </div>
+                            <div class="modal-body">
+                                <form role="form" id="form-cedula">
+                                    <div class="form-group row">
+                                        <span class="col-xs-2 text-right fa fa-credit-card fa-3x"></span>
+                                        <div class="col-xs-10">
+                                            <input name="cedula" id="cedula_valida" type="text" class="form-control input-lg" placeholder='Ingresa tu cedula de identidad' maxlength="8" onkeypress="return permite(event, 'num')" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">  
+                                        <div class="col-xs-12">                      
+                                            <button type="submit" class="btn btn-primary btn-lg btn-block">Validar</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <div id="resultado_cedula_invalida"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                    <div class="modal fade" id="hora_entrada" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+
+                    <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="hora_salida" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}

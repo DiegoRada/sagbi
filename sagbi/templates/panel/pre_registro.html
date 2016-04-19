@@ -1,0 +1,59 @@
+{% extends "panel/base.html" %}
+{% load static %}
+
+{% block contenido %}
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Pre-registro de Usuarios</h1>
+
+                <form role="form" method="post" id="form-pre-registro">{% csrf_token %}
+                    <p>Los campos con ( * ) son obligatorios.</p>
+                    <div class="form-group">
+                        <label for="cedula">Cedula de Identidad *</label>
+                        <input id="cedula" name="cedula" id="cedula" type="text" maxlength="8" onkeypress="return permite(event, 'num')" class="form-control" required>
+                    </div>
+                  
+                    <div class="form-group">
+                        <label for="nombre">Nombre *</label>
+                        <input id="nombre" name="nombre" type="text" maxlength="20" onkeypress="return permite(event, 'car')" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="apellido">Apellido</label>
+                        <input id="apellido" name="apellido" type="text" maxlength="20" onkeypress="return permite(event, 'car')" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Correo Electronico</label>
+                        <input id="email" name="email" type="email"  maxlength="50" onkeypress="return permite(event, 'num_car')" class="form-control">
+                    </div>
+
+                    {% if mensaje %}
+
+                        <div class="alert alert-success text-center" role="alert"><b>{{ mensaje }}</b></div>
+                                        
+                    {% endif %}
+
+                    {% if mensaje2 %}
+
+                        <div class="alert alert-danger text-center" role="alert"><b>{{ mensaje2 }}</b></div>
+                                        
+                    {% endif %}
+
+                    <div id="resultado_cedula_invalida"></div>
+
+                    <div class="form-group row">  
+                        <div class="col-xs-12">                      
+                            <button type="submit" class="btn btn-primary btn-md btn-block">Guardar</button>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}

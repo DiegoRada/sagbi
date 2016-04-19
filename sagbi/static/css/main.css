@@ -1,0 +1,175 @@
+@import url("font-awesome.min.css");
+
+/* Estilos Propios */
+
+.hr-cintillo{
+	background-color: #C60000;
+	height: 6px;
+	border: 0;
+	margin-top:2px;
+}
+
+.hr-division{
+	background-color: #E2E2E2;
+	height: 1px;
+	border: 0;
+	margin-top:0px;
+}
+
+.cintillo{
+	height: 50px;
+	width: 400px;
+}
+
+.cintillo2{
+	height: 55px;
+	width: 100px;
+}
+
+.logo{
+	height: 88px;
+	width: 150px;
+}
+
+.titulo_principal{
+	text-align: center;
+}
+
+.rojo{
+	color: #C60000;
+}
+
+.azul{
+	color: #28309E;
+	font-size: 25px;
+}
+
+.azul_h1{
+	color: #28309E;
+	font-size: 36px;
+}
+
+.navbar-menu{
+    background-color: #E5E5E5;
+    border-color: #E5E5E5;
+    border-radius: 0px;
+}
+
+.navbar-default .navbar-nav>li>a {
+    font-size: 25px;
+    color: #474646;
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+    color: #C60000;
+}
+
+.enlace{
+	font-size: 18px;
+	color: #474646;
+}
+
+.enlace:hover{
+	color: #C60000;
+	text-decoration: none;
+}
+
+.titulo-multi-material{
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+#pie p {
+    border-top: 1px solid #dadada;
+    color: #999999;
+    padding-top: 5px;
+    text-align: center;
+}
+
+.centrado_login{
+	width: 200px;
+	text-align: center;
+	margin: auto;
+
+}
+
+.centrado_inicio{
+	width: 800px;
+	text-align: center;
+	margin: auto;
+}
+
+.afiche{
+	width: 190px;
+	height: 271px;
+}
+
+.afiche_detalles{
+	margin-left: 35px !important;
+	margin-top: 30px !important;
+}
+
+.afiche_detalles_plus{
+	width: 274px;
+	height: 417px;
+}
+
+.img_reproductor{
+	width: 274px;
+	height: 168px;
+}
+
+.img_inicio{
+	width: 250px;
+	height: 188px;
+}
+
+.panel-title {
+	text-align: center;
+	font-size: 18px;
+}
+
+.login-panel {
+    margin-top: 25px;
+}
+
+.texto_funcion{
+	color: #4C4C4C;
+	font-size: 16px;
+}
+
+.texto_agregar{
+	color: #28309E;
+	font-size: 25px;
+}
+
+.icono_menu{
+	width: 95px;
+	height: 45px;
+	margin-top: -12px;
+}
+
+.navbar-brand>img {
+    display: inline;
+}
+
+.enlace_panel{
+	color: #286090 !important;
+	font-size: 18px !important;
+}
+
+.fz16{
+	font-size: 14px !important;
+}
+
+#modal-box{
+	margin-top: 200px;
+}
+
+#modal-registro{
+	margin-top: 120px;
+}
+.msg-azul {
+	font-size: 17px;
+	color: #2e6da4;
+}

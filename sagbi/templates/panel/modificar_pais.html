@@ -1,0 +1,35 @@
+{% load static %}
+<div class="modal-header">
+    <h4 class="modal-title">Modificar País</h4>
+</div>
+<div class="modal-body"> 
+    <form role="form" id="form-pais-modificar" >{% csrf_token %}
+
+        <input name="pais_id" id="pais_id" type="hidden" value="{{ pais.id }}">
+
+        <div class="form-group row">
+            <span class="col-xs-2 text-right fa fa-globe fa-3x"></span>
+            <div class="col-xs-10">
+                <input name="pais_modificar" id="pais_modificar" type="text" class="form-control input-lg" value="{{ pais.nombre_pais }}" maxlength="50" onkeypress="return permite(event, 'car')" required>
+            </div>
+        </div>
+
+        <div class="form-group row">  
+            <div class="col-xs-12">                      
+                <button type="submit" class="btn btn-primary btn-md btn-block">Modificar</button>
+                <a class="btn btn-info btn-md btn-block" href="/agregar-pais/">Volver</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script language = javascript>
+    $('#form-pais-modificar').submit(function(){ 
+        event.preventDefault();               
+        modificar_pais();
+    });
+</script>
+
+<div class="modal-footer">
+    <div id="resultado_invalido_plus"></div>
+</div>

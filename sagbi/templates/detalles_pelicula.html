@@ -1,0 +1,60 @@
+{% load static %}
+<div class="modal-header">
+    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+    <h4 class="modal-title">The Hunger Games</h4>
+</div>
+
+<div class="modal-body modal-detalles">
+    <div class="container">      
+        <div class="row">
+            <div class="col-md-3">
+                <img class="afiche afiche_detalles" src="{% static 'img/pel4.jpg' %}">
+            </div>
+            <div class="col-md-6">
+
+                <p class="texto_medio"><b class="text_azul">Titulo Traducido:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['cedula_invitado']; ?></p>
+                <p class="texto_medio"><b class="text_azul">Año:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['nombre_invitado']; ?></p>
+                <p class="texto_medio"><b class="text_azul">Duracion:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['apellido_invitado']; ?></p>
+
+                <?php if ($fila['placa']): ?>
+                    <p class="texto_medio"><b class="text_azul">Pais:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['placa']; ?></p>
+                <?php endif ?>
+                
+                <?php if ($fila['telefono_movil_invitado']): ?>
+                    <p class="texto_medio"><b class="text_azul">director:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['telefono_movil_invitado']; ?></p>
+                <?php endif ?>
+                
+                <?php if ($fila['telefono_fijo_invitado']): ?>
+                    <p class="texto_medio"><b class="text_azul">Guion:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['telefono_fijo_invitado']; ?></p>
+                <?php endif ?>
+
+                <?php if ($fila['fecha']): ?>
+                    <p class="texto_medio"><b class="text_azul">Fotografia:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['fecha']; ?></p>
+                <?php endif ?>
+
+                <?php if ($fila['nombre']): ?>
+                    <p class="texto_medio"><b class="text_azul">Reparto:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['nombre']." ".$fila['apellido']; ?></p>
+                <?php endif ?>
+
+                <?php if ($fila['departamento']): ?>
+                    <p class="texto_medio"><b class="text_azul">Productora:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['departamento']; ?></p>
+                <?php endif ?>
+
+                <?php if ($fila['estatus']): ?>
+                    <p class="texto_medio"><b class="text_azul">Sinopsis:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['estatus']; ?></p>
+                <?php endif ?>
+                
+                <?php if ($fila['hora_entrada']): ?>
+                    <p class="texto_medio"><b class="text_azul">Criticas:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['hora_entrada']; ?></p>
+                <?php endif ?>
+                
+               
+
+                <br> 
+                <a type="button" class="btn btn-primary btn-md btn-block" href="/detalles-plus-pelicula">Ver mas detalles</a>
+                <a type="button" class="btn btn-info btn-md btn-block" href="/peliculas">Volver</a>
+            </div>
+
+        </div>
+    </div>    
+</div>
