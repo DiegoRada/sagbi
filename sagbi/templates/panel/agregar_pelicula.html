@@ -6,34 +6,36 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Peliculas</h1>
+                <h1 class="page-header">Películas</h1>
 
                 <br>
                 <div class="pull-right">
-                    <a href="#registrate" data-toggle="modal" class="texto_agregar text-right"><i class="fa fa-plus-circle fa-fw"></i> Agregar Pelicula</a>
+                    <a href="#agregar" data-toggle="modal" class="texto_agregar text-right"><i class="fa fa-plus-circle fa-fw"></i> Agregar Película</a>
                 </div>
                 <br><br><br>
 
                 <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
+                    <div class="col-md-6 col-md-offset-3">
                         
                         <div class="table-responsive">
                             <table class="table table-striped table-hover texto_medio">
                                 <thead>
                                     <tr>
                                         <th><b>N°</b></th>
-                                        <th><b>Pelicula</b></th>
+                                        <th><b>Película</b></th>
                                         <th><b>Acción</b></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>The Matrix</td>
-                                        <td>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;<a data-toggle="modal" data-target="#modificar" href="/modificar-pais/{{ pais.id }}/"><i class="fa fa-edit fa-lg"></i></a>
-                                        </td>
-                                    </tr>
+                                    {% for pelicula in peliculas %}
+                                        <tr>
+                                            <td>{{ pelicula.id }}</td>
+                                            <td>{{ pelicula.titulo_original }}</td>                                            
+                                            <td>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;<a data-toggle="modal" data-target="#modificar" href="/modificar-pelicula/{{ pelicula.id }}/"><i class="fa fa-edit fa-lg"></i></a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
@@ -41,52 +43,132 @@
                     </div>
                 </div>
 
-                <div class="modal fade" id="registrate" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content" id="modal-box">
+                <div class="modal fade" id="agregar" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Valida tus datos</h4>
-                                </div>
+                                <h4 class="modal-title">Agregar Película</h4>
+                            </div>
                             <div class="modal-body">
-                                <form role="form" id="form-cedula">
-                                    <div class="form-group row">
-                                        <span class="col-xs-2 text-right fa fa-credit-card fa-3x"></span>
-                                        <div class="col-xs-10">
-                                            <input name="cedula" id="cedula_valida" type="text" class="form-control input-lg" placeholder='Ingresa tu cedula de identidad' maxlength="8" onkeypress="return permite(event, 'num')" required>
+                                <form role="form" id="form-pelicula">{% csrf_token %}                                    
+
+                                    <div class="form-group row">                                        
+                                        <div class="col-xs-6">
+                                            <input name="titulo_original" id="titulo_original" type="text" class="form-control input-md" placeholder='Ingresa el título original' maxlength="150" onkeypress="return permite(event, 'num_car')" required>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <input name="titulo_traducido" id="titulo_traducido" type="text" class="form-control input-md" placeholder='Ingresa el título traducido' maxlength="150" onkeypress="return permite(event, 'num_car')" > 
                                         </div>
                                     </div>
 
+                                    <div class="form-group row">                                        
+                                        <div class="col-xs-6">
+                                            <input name="anio" id="anio" type="text" class="form-control input-md" placeholder='Ingresa el año' maxlength="4" onkeypress="return permite(event, 'num')" required>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <input name="duracion" id="duracion" type="text" class="form-control input-md" placeholder='Ingresa la duración Ej. "1:22:00" o "82 min"' maxlength="10" onkeypress="return permite(event, 'num_car')" required> 
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">                                        
+                                        <div class="col-xs-6">
+                                            <select name="pais" id="pais" class="form-control">
+                                                <option value=0>Selecciona el País</option>
+                                                {% for pais in paises %}
+                                                    <option value="{{ pais.id }}">{{ pais.nombre_pais }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <select name="director" id="director" class="form-control">
+                                                <option value=0>Selecciona el Director</option>
+                                                {% for director in directores %}
+                                                    <option value="{{ director.id }}">{{ director.nombre_director }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">                                        
+                                        <div class="col-xs-6">
+                                            <input name="guion" id="guion" type="text" class="form-control input-md" placeholder='Ingresa el encargado del guion' maxlength="255" onkeypress="return permite(event, 'car')" >
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <input name="fotografia" id="fotografia" type="text" class="form-control input-md" placeholder='Ingresa el encargado de la fotografía' maxlength="255" onkeypress="return permite(event, 'car')" > 
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">                                        
+                                        <div class="col-xs-6">
+                                            <input name="reparto" id="reparto" type="text" class="form-control input-md" placeholder='Ingresa el Reparto' maxlength="255" onkeypress="return permite(event, 'car')" >
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <input name="productora" id="productora" type="text" class="form-control input-md" placeholder='Ingresa la Productora' maxlength="255" onkeypress="return permite(event, 'car')" > 
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">                                        
+                                        <div class="col-xs-6">
+                                            <textarea name="sinopsis" id="sinopsis" maxlength="800" placeholder='Ingresa la Sinopsis'onkeypress="return permite(event, 'num_car')" class="form-control" rows="3" ></textarea>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <textarea name="criticas" id="criticas" maxlength="1300" placeholder='Ingresa las Criticas' onkeypress="return permite(event, 'num_car')" class="form-control" rows="3" ></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">                                        
+                                        <div class="col-xs-6">
+                                            <label for="pelicula_digital">Agregar Película&nbsp;&nbsp;&nbsp;<i class="fa fa-paperclip fa-lg"></i></label>
+                                            <input id="pelicula_digital" name="pelicula_digital" type="file" class="form-control">
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <label for="pelicula_afiche">Agregar Afiche&nbsp;&nbsp;&nbsp;<i class="fa fa-paperclip fa-lg"></i></label>
+                                            <input id="pelicula_afiche" name="pelicula_afiche" type="file" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">                                        
+                                        <div class="col-xs-6">
+                                            <label for="pelicula_subtitulo">Agregar Subtitulos&nbsp;&nbsp;&nbsp;<i class="fa fa-paperclip fa-lg"></i></label>
+                                            <input id="pelicula_subtitulo" name="pelicula_subtitulo" type="file" class="form-control">
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <label for="pelicula_ficha">Agregar Ficha&nbsp;&nbsp;&nbsp;<i class="fa fa-paperclip fa-lg"></i></label>
+                                            <input id="pelicula_ficha" name="pelicula_ficha" type="file" class="form-control">
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+
+
                                     <div class="form-group row">  
-                                        <div class="col-xs-12">                      
-                                            <button type="submit" class="btn btn-primary btn-lg btn-block">Validar</button>
+                                        <div class="col-xs-6">                      
+                                            <button type="submit" class="btn btn-primary btn-md btn-block">Agregar</button>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <a class="btn btn-info btn-md btn-block" href="/agregar-pelicula/">Volver</a>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <div id="resultado_cedula_invalida"></div>
+                                <div id="resultado_invalido"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                    <div class="modal fade" id="hora_entrada" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
-
+                <div class="modal fade" id="modificar" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
                     <div class="modal-dialog" role="document">
-                            <div class="modal-content">
+                        <div class="modal-content" id="modal-box">
 
-                            </div>
                         </div>
                     </div>
-
-                    <div class="modal fade" id="hora_salida" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-
-                            </div>
-                        </div>
-                    </div>
+                </div>
 
             </div>
         </div>

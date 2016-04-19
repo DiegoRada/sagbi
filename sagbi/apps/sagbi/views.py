@@ -108,7 +108,18 @@ def guardar_modificar_director(request):
 
 @login_required()
 def agregar_pelicula(request):
-	return render(request, 'panel/agregar_pelicula.html')
+	if request.is_ajax():
+		director_c = Directores.objects.filter(nombre_director=request.POST['director'])
+		if len(director_c) > 0:
+			return HttpResponse('<div class="alert alert-danger text-center" role="alert"><b>Este director ya esta registrado, por favor verifique sus datos.</b></div>')				
+		else:
+			director = Directores.objects.create(nombre_director=request.POST['director'])
+			return HttpResponse('<div class="alert alert-success text-center" role="alert"><b>Director registrado exitosamente.</b></div>')
+	else:
+		peliculas = Peliculas.objects.order_by("-id")
+		paises = Paises.objects.order_by("-id")
+		directores = Directores.objects.order_by("-id")
+		return render(request, 'panel/agregar_pelicula.html',{'peliculas' : peliculas, 'paises' : paises, 'directores' : directores})
 
 
 @login_required()
