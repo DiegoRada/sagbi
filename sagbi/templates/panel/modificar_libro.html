@@ -1,0 +1,113 @@
+{% load static %}
+<div class="modal-header">
+    <h4 class="modal-title">Modificar Libro</h4>
+</div>
+<div class="modal-body">    
+    <div class="container">
+    <div class="col-xs-11 col-lg-9">
+
+        <div id="resultado_invalido_plus"></div>
+        <div class="col-xs-3">
+            {% if libro.libro_afiche %}
+                <img class="afiche afiche_panel" src="/static/media/{{ libro.libro_afiche }}">
+                {% else %}
+                <img class="afiche afiche_panel" src="{% static 'img/icono_libro.png' %}">
+            {% endif %}            
+        </div>
+        <div class="col-xs-9">
+            <h4>Modificar Datos</h4>
+            <form role="form" id="form-libro-modificar" method="post" action="/guardar-modificar-libro/">{% csrf_token %}
+                <input name="libro_id" id="libro_id" type="hidden" value="{{ libro.id }}">
+
+                <div class="form-group row">                                        
+                    <div class="col-xs-6">
+                        <input name="titulo_libro_modificar" id="titulo_libro_modificar" type="text" class="form-control input-md" value="{{ libro.titulo_libro }}" maxlength="150" onkeypress="return permite(event, 'num_car')" required>
+                    </div>
+                    <div class="col-xs-6">
+                        <select name="autor_modificar" id="autor_modificar" class="form-control">
+                            <option value="{{ libro.autor.id }}">{{ libro.autor }}</option>
+                            {% for autor in autores %}
+                                {% if autor.id != libro.autor.id %}                                
+                                    <option value="{{ autor.id }}">{{ autor.nombre_autor }}</option>
+                                {% endif %}                                
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">                                        
+                    <div class="col-xs-6">
+                        <input name="isbn_modificar" id="isbn_modificar" type="text" class="form-control input-md" placeholder='Ingresa el ISBN' value="{{ libro.isbn }}" maxlength="100" onkeypress="return permite(event, 'num_car')">
+                    </div>
+                    <div class="col-xs-6">
+                        <input name="edicion_modificar" id="edicion_modificar" type="text" class="form-control input-md" placeholder='Ingresa la Edicion' value="{{ libro.edicion }}" maxlength="100" onkeypress="return permite(event, 'num_car')"> 
+                    </div>
+                </div>
+
+                <div class="form-group row">                                        
+                    <div class="col-xs-6">
+                        <input name="publicacion_modificar" id="publicacion_modificar" type="text" class="form-control input-md" placeholder='Ingresa la publicacion' value="{{ libro.publicacion }}" maxlength="100" onkeypress="return permite(event, 'num_car')">
+                    </div>
+                    <div class="col-xs-6">
+                        <textarea name="descripcion_modificar" id="descripcion_modificar" maxlength="1000" placeholder='Ingresa la Descripcion' onkeypress="return permite(event, 'num_car')" class="form-control" rows="3">{{ libro.descripcion }}</textarea> 
+                    </div>
+                </div>              
+
+                <div class="form-group row">
+                    <div class="col-xs-12">
+                        <button type="submit" class="btn btn-primary btn-md btn-block" name="modificar_libro_datos">Modificar Datos</button>
+                    </div>
+                </div>
+            </form>
+
+            <h4>Modificar Archivos</h4>
+            <form role="form" id="form-libro-modificar-archivos" method="post" enctype="multipart/form-data" action="/guardar-modificar-libro/">{% csrf_token %}
+                <input name="libro_id" id="libro_id" type="hidden" value="{{ libro.id }}">
+
+                <div class="form-group row">                                        
+                    <div class="col-xs-6">
+                        <label for="libro_digital_modificar">Modificar Libro&nbsp;&nbsp;&nbsp;<i class="fa fa-paperclip fa-lg"></i></label>
+                        <input id="libro_digital_modificar" name="libro_digital_modificar" type="file" class="form-control">
+                    </div>
+                    <div class="col-xs-6">
+                        <label for="libro_afiche_modificar">Modificar Afiche&nbsp;&nbsp;&nbsp;<i class="fa fa-paperclip fa-lg"></i></label>
+                        <input id="libro_afiche_modificar" name="libro_afiche_modificar" type="file" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group row">                                        
+                    <div class="col-xs-12">
+                        <label for="libro_ficha_modificar">Modificar Ficha&nbsp;&nbsp;&nbsp;<i class="fa fa-paperclip fa-lg"></i></label>
+                        <input id="libro_ficha_modificar" name="libro_ficha_modificar" type="file" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-xs-12">  
+                        <button type="submit" class="btn btn-primary btn-md btn-block" name="modificar_libro_archivos">Modificar Archivos</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="form-group row">
+                <div class="col-xs-12">
+                    <a class="btn btn-info btn-md btn-block" href="/agregar-libro/">Volver</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+</div>
+
+<script language = javascript>
+    $('#form-libro-modificar').submit(function(){ 
+        $("#resultado_invalido_plus").html('<p class="msg-azul">Procesando, espere por favor...</p>');
+    });
+</script>
+
+<script language = javascript>
+    $('#form-libro-modificar-archivos').submit(function(){ 
+        $("#resultado_invalido_plus").html('<p class="msg-azul">Procesando, espere por favor...</p>');
+    });
+</script>

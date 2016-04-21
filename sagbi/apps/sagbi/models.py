@@ -36,14 +36,11 @@ class Peliculas(models.Model):
 	productora = models.CharField(max_length=150,null=True)
 	sinopsis = models.TextField(max_length=800,null=True)
 	criticas = models.TextField(max_length=1300,null=True)
-
-	# pip install pillow  para trabajar con imagenes
 	
-	url_pelicula = models.CharField(max_length=255)
-	url_afiche_pelicula = models.CharField(max_length=255,null=True)
-	url_subtitulo = models.CharField(max_length=255,null=True)
-	url_ficha_pelicula = models.CharField(max_length=255,null=True)
-
+	pelicula_digital = models.FileField(upload_to='peliculas/')
+	pelicula_afiche = models.FileField(upload_to='peliculas/',null=True)
+	subtitulo = models.FileField(upload_to='peliculas/',null=True)
+	pelicula_ficha = models.FileField(upload_to='peliculas/',null=True)
 
 	def __unicode__(self):
 		return self.titulo_original
@@ -83,9 +80,9 @@ class Libros(models.Model):
 	publicacion = models.CharField(max_length=100,null=True)
 	descripcion = models.TextField(max_length=1000,null=True)
 	
-	url_libro = models.CharField(max_length=255)
-	url_afiche_libro = models.CharField(max_length=255,null=True)
-	url_ficha_libro = models.CharField(max_length=255,null=True)
+	libro_digital = models.FileField(upload_to='libros/')
+	libro_afiche = models.FileField(upload_to='libros/',null=True)
+	libro_ficha = models.FileField(upload_to='libros/',null=True)
 
 
 	def __unicode__(self):

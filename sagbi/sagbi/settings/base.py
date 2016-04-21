@@ -1,5 +1,4 @@
 import os
-# pip install unipath para trabajar con las rutas del directorio actual
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -8,8 +7,6 @@ SECRET_KEY = '*zomc&c&ai$9!2532zwo8qx^q1192@di(65pg(t7f4%!#0@t-*'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-# Application definition
 
 DJANGO_APPS = (
         'django.contrib.admin',
@@ -62,9 +59,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sagbi.wsgi.application'
 
-# CONFIG ZONA HORARIA
-
-LANGUAGE_CODE = 'es-es'
+LANGUAGE_CODE = 'es-ve'
 
 TIME_ZONE = 'UTC'
 

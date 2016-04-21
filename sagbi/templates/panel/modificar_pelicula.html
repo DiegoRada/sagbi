@@ -1,0 +1,151 @@
+{% load static %}
+<div class="modal-header">
+    <h4 class="modal-title">Modificar Película</h4>
+</div>
+<div class="modal-body">    
+    <div class="container">
+    <div class="col-xs-11 col-lg-9">
+
+        <div id="resultado_invalido_plus"></div>
+        <div class="col-xs-3">
+            {% if pelicula.pelicula_afiche %}
+                <img class="afiche afiche_panel" src="/static/media/{{ pelicula.pelicula_afiche }}">
+                {% else %}
+                <img class="afiche afiche_panel" src="{% static 'img/icono_pelicula.jpg' %}">
+            {% endif %}            
+        </div>
+        <div class="col-xs-9">
+            <h4>Modificar Datos</h4>
+            <form role="form" id="form-pelicula-modificar" method="post" action="/guardar-modificar-pelicula/">{% csrf_token %}
+                <input name="pelicula_id" id="pelicula_id" type="hidden" value="{{ pelicula.id }}">
+
+                <div class="form-group row">                                        
+                    <div class="col-xs-6">
+                        <input name="titulo_original_modificar" id="titulo_original_modificar" type="text" class="form-control input-md" value="{{ pelicula.titulo_original }}" maxlength="150" onkeypress="return permite(event, 'num_car')" required>
+                    </div>
+                    <div class="col-xs-6">
+                        <input name="titulo_traducido_modificar" id="titulo_traducido_modificar" type="text" class="form-control input-md" placeholder='Ingresa el título traducido' value="{{ pelicula.titulo_traducido }}" maxlength="150" onkeypress="return permite(event, 'num_car')" > 
+                    </div>
+                </div>
+
+                <div class="form-group row">                                        
+                    <div class="col-xs-6">
+                        <input name="anio_modificar" id="anio_modificar" type="text" class="form-control input-md" value="{{ pelicula.anio }}" maxlength="4" onkeypress="return permite(event, 'num')" required>
+                    </div>
+                    <div class="col-xs-6">
+                        <input name="duracion_modificar" id="duracion_modificar" type="text" class="form-control input-md" value="{{ pelicula.duracion }}" maxlength="10" onkeypress="return permite(event, 'num_car')" required> 
+                    </div>
+                </div>
+
+                <div class="form-group row">                                        
+                    <div class="col-xs-6">
+                        <select name="pais_modificar" id="pais_modificar" class="form-control">
+                            <option value="{{ pelicula.pais.id }}">{{ pelicula.pais }}</option>
+                            {% for pais in paises %}
+                                {% if pais.id != pelicula.pais.id %}                                
+                                    <option value="{{ pais.id }}">{{ pais.nombre_pais }}</option>
+                                {% endif %}                                
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-xs-6">
+                        <select name="director_modificar" id="director_modificar" class="form-control">
+                            <option value="{{ pelicula.director.id }}">{{ pelicula.director }}</option>
+                            {% for director in directores %}
+                                {% if director.id != pelicula.director.id %}
+                                    <option value="{{ director.id }}">{{ director.nombre_director }}</option>
+                                {% endif %}                                
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">                                        
+                    <div class="col-xs-6">
+                        <input name="guion_modificar" id="guion_modificar" type="text" class="form-control input-md" placeholder='Ingresa el encargado del guion' value="{{ pelicula.guion }}" maxlength="255" onkeypress="return permite(event, 'car')" >
+                    </div>
+                    <div class="col-xs-6">
+                        <input name="fotografia_modificar" id="fotografia_modificar" type="text" class="form-control input-md" placeholder='Ingresa el encargado de la fotografía' value="{{ pelicula.fotografia }}" maxlength="255" onkeypress="return permite(event, 'car')" > 
+                    </div>
+                </div>
+
+                <div class="form-group row">                                        
+                    <div class="col-xs-6">
+                        <input name="reparto_modificar" id="reparto_modificar" type="text" class="form-control input-md" placeholder='Ingresa el Reparto' value="{{ pelicula.reparto }}" maxlength="255" onkeypress="return permite(event, 'car')" >
+                    </div>
+                    <div class="col-xs-6">
+                        <input name="productora_modificar" id="productora_modificar" type="text" class="form-control input-md" placeholder='Ingresa la Productora' value="{{ pelicula.productora }}" maxlength="255" onkeypress="return permite(event, 'car')" > 
+                    </div>
+                </div>
+
+                <div class="form-group row">                                        
+                    <div class="col-xs-6">
+                        <textarea name="sinopsis_modificar" id="sinopsis_modificar" maxlength="800" onkeypress="return permite(event, 'num_car')" class="form-control" rows="3" placeholder='Ingresa la Sinopsis'>{{ pelicula.sinopsis }}</textarea>
+                    </div>
+                    <div class="col-xs-6">
+                        <textarea name="criticas_modificar" id="criticas_modificar" maxlength="1300" onkeypress="return permite(event, 'num_car')" class="form-control" rows="3" placeholder='Ingresa las Criticas'>{{ pelicula.criticas }}</textarea>
+                    </div>
+                </div>                
+
+                <div class="form-group row">
+                    <div class="col-xs-12">
+                        <button type="submit" class="btn btn-primary btn-md btn-block" name="modificar_pelicula_datos">Modificar Datos</button>
+                    </div>
+                </div>
+            </form>
+
+            <h4>Modificar Archivos</h4>
+            <form role="form" id="form-pelicula-modificar-archivos" method="post" enctype="multipart/form-data" action="/guardar-modificar-pelicula/">{% csrf_token %}
+                <input name="pelicula_id" id="pelicula_id" type="hidden" value="{{ pelicula.id }}">
+
+                <div class="form-group row">                                        
+                    <div class="col-xs-6">
+                        <label for="pelicula_digital_modificar">Modificar Película&nbsp;&nbsp;&nbsp;<i class="fa fa-paperclip fa-lg"></i></label>
+                        <input id="pelicula_digital_modificar" name="pelicula_digital_modificar" type="file" class="form-control">
+                    </div>
+                    <div class="col-xs-6">
+                        <label for="pelicula_afiche_modificar">Modificar Afiche&nbsp;&nbsp;&nbsp;<i class="fa fa-paperclip fa-lg"></i></label>
+                        <input id="pelicula_afiche_modificar" name="pelicula_afiche_modificar" type="file" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group row">                                        
+                    <div class="col-xs-6">
+                        <label for="subtitulo_modificar">Modificar Subtitulos&nbsp;&nbsp;&nbsp;<i class="fa fa-paperclip fa-lg"></i></label>
+                        <input id="subtitulo_modificar" name="subtitulo_modificar" type="file" class="form-control">
+                    </div>
+                    <div class="col-xs-6">
+                        <label for="pelicula_ficha_modificar">Modificar Ficha&nbsp;&nbsp;&nbsp;<i class="fa fa-paperclip fa-lg"></i></label>
+                        <input id="pelicula_ficha_modificar" name="pelicula_ficha_modificar" type="file" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-xs-12">  
+                        <button type="submit" class="btn btn-primary btn-md btn-block" name="modificar_pelicula_archivos">Modificar Archivos</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="form-group row">
+                <div class="col-xs-12">
+                    <a class="btn btn-info btn-md btn-block" href="/agregar-pelicula/">Volver</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+</div>
+
+<script language = javascript>
+    $('#form-pelicula-modificar').submit(function(){ 
+        $("#resultado_invalido_plus").html('<p class="msg-azul">Procesando, espere por favor...</p>');
+    });
+</script>
+
+<script language = javascript>
+    $('#form-pelicula-modificar-archivos').submit(function(){ 
+        $("#resultado_invalido_plus").html('<p class="msg-azul">Procesando, espere por favor...</p>');
+    });
+</script>

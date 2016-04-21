@@ -24,5 +24,9 @@ urlpatterns = patterns('',
 	url(r'^guardar-modificar-director/$', 'apps.sagbi.views.guardar_modificar_director', name="guardar_modificar_director"),
 	url(r'^modificar-autor/(?P<autor_id>[0-9]+)/$', 'apps.sagbi.views.modificar_autor', name="modificar_autor"),
 	url(r'^guardar-modificar-autor/$', 'apps.sagbi.views.guardar_modificar_autor', name="guardar_modificar_autor"),
+	url(r'^modificar-pelicula/(?P<pelicula_id>[0-9]+)/$', 'apps.sagbi.views.modificar_pelicula', name="modificar_pelicula"),
+	url(r'^guardar-modificar-pelicula/$', 'apps.sagbi.views.guardar_modificar_pelicula', name="guardar_modificar_pelicula"),
+	url(r'^modificar-libro/(?P<libro_id>[0-9]+)/$', 'apps.sagbi.views.modificar_libro', name="modificar_libro"),
+	url(r'^guardar-modificar-libro/$', 'apps.sagbi.views.guardar_modificar_libro', name="guardar_modificar_libro"),
 
 )	

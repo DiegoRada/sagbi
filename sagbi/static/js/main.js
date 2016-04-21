@@ -1,7 +1,7 @@
 function permite(elEvento, permitidos) {
     // Variables que definen los caracteres permitidos
     var numeros = "0123456789";
-    var caracteres = " abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ_-.@";
+    var caracteres = " abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ_-.,:@";
     var numeros_caracteres = numeros + caracteres;
     var teclas_especiales = [8, 9, 13, 16, 18, 39];
     // 8 = BackSpace, 46 = punto, 39 = flecha derecha
@@ -442,6 +442,38 @@ function modificar_autor(){
     });
 }
 
+function validar_pelicula(){
+
+    if(document.getElementById("pais").value == 0){
+        $("#resultado_invalido").html('<div class="alert alert-danger text-center" role="alert"><b>Debe seleccionar un país, por favor verifique sus datos.</b></div>');
+        document.getElementById("pais").focus();
+        return false;
+    }
+
+    if(document.getElementById("director").value == 0){
+        $("#resultado_invalido").html('<div class="alert alert-danger text-center" role="alert"><b>Debe seleccionar un director, por favor verifique sus datos.</b></div>');
+        document.getElementById("director").focus();
+        return false;
+    }
+
+    $("#resultado_invalido").html('<p class="msg-azul">Procesando, espere por favor...</p>');
+
+    return true;
+}
+
+function validar_libro(){
+
+    if(document.getElementById("autor").value == 0){
+        $("#resultado_invalido").html('<div class="alert alert-danger text-center" role="alert"><b>Debe seleccionar un Autor, por favor verifique sus datos.</b></div>');
+        document.getElementById("autor").focus();
+        return false;
+    }
+
+    $("#resultado_invalido").html('<p class="msg-azul">Procesando, espere por favor...</p>');
+
+    return true;
+}
+
 $(document).ready(function() {
 
     $('#form-login').submit(function(){ 
@@ -483,6 +515,14 @@ $(document).ready(function() {
     $('#form-autor').submit(function(){ 
         event.preventDefault();
         agregar_autor($('#autor').val());
+    });
+
+    $('#form-pelicula').submit(function(){ 
+        return validar_pelicula(); 
+    });
+
+    $('#form-libro').submit(function(){ 
+        return validar_libro(); 
     });
 
 

@@ -114,6 +114,11 @@
 	height: 417px;
 }
 
+.afiche_panel{
+	margin-left: -25px !important;
+	margin-top: 30px !important;
+}
+
 .img_reproductor{
 	width: 274px;
 	height: 168px;
