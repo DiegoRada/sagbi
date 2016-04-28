@@ -3,30 +3,310 @@ from .models import *
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 def index(request):
-	return render(request, 'index.html')
+	peliculas = Peliculas.objects.order_by("-id")[:4]
+	libros = Libros.objects.order_by("-id")[:4]
+	return render(request, 'index.html',{'peliculas' : peliculas, 'libros' : libros})
+
 
 def peliculas(request):
-	return render(request, 'peliculas.html')
+	if request.method == 'POST':
 
-def detalles_pelicula(request):
-	return render(request, 'detalles_pelicula.html')
+		mensaje = ''
+		peliculas = ''
 
-def detalles_plus_pelicula(request):
-	return render(request, 'detalles_plus_pelicula.html')
+		if request.POST['pais'] == '0' and request.POST['director'] == '0':
+			peliculas = Peliculas.objects.filter(anio=request.POST['anio'])
+			if len(peliculas) <= 0:
+				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
+
+		elif request.POST['anio'] == '' and request.POST['director'] == '0':
+			peliculas = Peliculas.objects.filter(pais=request.POST['pais'])
+			if len(peliculas) <= 0:
+				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
+
+		elif request.POST['anio'] == '' and request.POST['pais'] == '0':
+			peliculas = Peliculas.objects.filter(director=request.POST['director'])
+			if len(peliculas) <= 0:
+				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
+
+		elif request.POST['director'] == '0':
+			peliculas = Peliculas.objects.filter(pais=request.POST['pais'], anio=request.POST['anio'])
+			if len(peliculas) <= 0:
+				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
+
+		elif request.POST['pais'] == '0':
+			peliculas = Peliculas.objects.filter(director=request.POST['director'], anio=request.POST['anio'])
+			if len(peliculas) <= 0:
+				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
+
+		elif request.POST['anio'] == '':
+			peliculas = Peliculas.objects.filter(director=request.POST['director'], pais=request.POST['pais'])
+			if len(peliculas) <= 0:
+				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
+
+		else:
+			peliculas = Peliculas.objects.filter(director=request.POST['director'], pais=request.POST['pais'], anio=request.POST['anio'])
+			if len(peliculas) <= 0:
+				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
+
+		result_list  =  Paginator(peliculas, 20)
+
+		try:
+			page = int(request.GET.get('page'));
+		except:
+			page = 1
+		if (page < result_list.page(page)):
+			pagina = result_list.page(page)
+			Contexto = {'modelo': pagina.object_list, #Asignamos registros de la pagina
+				 'page': page, #Pagina Actual
+				 'pages': result_list.num_pages, #Cantidad de Paginas
+				 'has_next': pagina.has_next(), #True si hay proxima pagina
+				 'has_prev': pagina.has_previous(), #true si hay Pagina anterior
+				 'next_page': page+1, #Proxima pagina
+				 'prev_page': page-1, #Pagina Anterior
+				 }
+
+		paises = Paises.objects.order_by("-id")
+		directores = Directores.objects.order_by("-id")
+
+		return render(request, 'peliculas.html',{'peliculas' : Contexto['modelo'], 'paginator': Contexto, 'paises' : paises, 'directores' : directores, 'mensaje' : mensaje})
+
+
+	peliculas = Peliculas.objects.order_by("-id")
+	result_list  =  Paginator(peliculas, 20)
+
+	try:
+		page = int(request.GET.get('page'));
+	except:
+		page = 1
+	if (page < result_list.page(page)):
+		pagina = result_list.page(page)
+		Contexto = {'modelo': pagina.object_list, #Asignamos registros de la pagina
+			 'page': page, #Pagina Actual
+			 'pages': result_list.num_pages, #Cantidad de Paginas
+			 'has_next': pagina.has_next(), #True si hay proxima pagina
+			 'has_prev': pagina.has_previous(), #true si hay Pagina anterior
+			 'next_page': page+1, #Proxima pagina
+			 'prev_page': page-1, #Pagina Anterior
+			 }
+
+	paises = Paises.objects.order_by("-id")
+	directores = Directores.objects.order_by("-id")
+
+	return render(request, 'peliculas.html',{'peliculas' : Contexto['modelo'], 'paginator': Contexto, 'paises' : paises, 'directores' : directores})
+
+def detalles_pelicula(request, pelicula_id):
+	pelicula = get_object_or_404(Peliculas, pk=pelicula_id)
+	return render(request, 'detalles_pelicula.html',{'pelicula' : pelicula})
+
+def detalles_plus_pelicula(request, pelicula_id):
+	mensaje = ''
+	if request.method == 'POST':
+		pelicula_v = get_object_or_404(Peliculas, pk=pelicula_id)
+		valoracion_pelicula = Valoracion_peliculas.objects.create(id_pelicula=pelicula_v, valoracion_pelicula=request.POST['valoracion_pelicula'])
+		mensaje = 'Valoracion asignada exitosamente'
+
+	pelicula = get_object_or_404(Peliculas, pk=pelicula_id)
+
+	valoraciones_pelicula = Valoracion_peliculas.objects.filter(id_pelicula=pelicula_id)
+
+	cantidad_valoraciones = len(valoraciones_pelicula)
+
+	valoraciones5 = 0
+	valoraciones4 = 0
+	valoraciones3 = 0
+	valoraciones2 = 0
+	valoraciones1 = 0
+
+	for valorcion_p in valoraciones_pelicula:
+		if valorcion_p.valoracion_pelicula == 5:
+			valoraciones5 += 1
+		if valorcion_p.valoracion_pelicula == 4:
+			valoraciones4 += 1
+		if valorcion_p.valoracion_pelicula == 3:
+			valoraciones3 += 1
+		if valorcion_p.valoracion_pelicula == 2:
+			valoraciones2 += 1
+		if valorcion_p.valoracion_pelicula == 1:
+			valoraciones1 += 1
+
+	return render(request, 'detalles_plus_pelicula.html',{'pelicula' : pelicula, 'mensaje' : mensaje, 'cantidad_valoraciones' : cantidad_valoraciones, 'valoraciones5' : valoraciones5, 'valoraciones4' : valoraciones4, 'valoraciones3' : valoraciones3, 'valoraciones2' : valoraciones2, 'valoraciones1' : valoraciones1,})
+
+def reproducir_pelicula(request, pelicula_id):
+	pelicula = get_object_or_404(Peliculas, pk=pelicula_id)
+	return render(request, 'reproducir_pelicula.html',{'pelicula' : pelicula})
+
+def emitir_reporte_pelicula(request, pelicula_id):
+
+	pelicula = get_object_or_404(Peliculas, pk=pelicula_id)
+
+	valoraciones_pelicula = Valoracion_peliculas.objects.filter(id_pelicula=pelicula_id)
+
+	cantidad_valoraciones = len(valoraciones_pelicula)
+
+	valoraciones5 = 0
+	valoraciones4 = 0
+	valoraciones3 = 0
+	valoraciones2 = 0
+	valoraciones1 = 0
+
+	for valorcion_p in valoraciones_pelicula:
+		if valorcion_p.valoracion_pelicula == 5:
+			valoraciones5 += 1
+		if valorcion_p.valoracion_pelicula == 4:
+			valoraciones4 += 1
+		if valorcion_p.valoracion_pelicula == 3:
+			valoraciones3 += 1
+		if valorcion_p.valoracion_pelicula == 2:
+			valoraciones2 += 1
+		if valorcion_p.valoracion_pelicula == 1:
+			valoraciones1 += 1
+
+	return render(request, 'reporte_pelicula.html',{'pelicula' : pelicula, 'cantidad_valoraciones' : cantidad_valoraciones, 'valoraciones5' : valoraciones5, 'valoraciones4' : valoraciones4, 'valoraciones3' : valoraciones3, 'valoraciones2' : valoraciones2, 'valoraciones1' : valoraciones1,})
+
 
 def libros(request):
-	return render(request, 'libros.html')
+	if request.method == 'POST':
 
-def detalles_libro(request):
-	return render(request, 'detalles_libro.html')
+		mensaje = ''
+		libros = ''
 
-def detalles_plus_libro(request):
-	return render(request, 'detalles_plus_libro.html')
+		libros = Libros.objects.filter(autor=request.POST['autor'])
+		if len(libros) <= 0:
+			mensaje = 'No se han encontrado libros con esos parametros de busqueda.'
+
+		result_list  =  Paginator(libros, 20)
+
+		try:
+			page = int(request.GET.get('page'));
+		except:
+			page = 1
+		if (page < result_list.page(page)):
+			pagina = result_list.page(page)
+			Contexto = {'modelo': pagina.object_list, #Asignamos registros de la pagina
+				 'page': page, #Pagina Actual
+				 'pages': result_list.num_pages, #Cantidad de Paginas
+				 'has_next': pagina.has_next(), #True si hay proxima pagina
+				 'has_prev': pagina.has_previous(), #true si hay Pagina anterior
+				 'next_page': page+1, #Proxima pagina
+				 'prev_page': page-1, #Pagina Anterior
+				 }
+
+		autores = Autores.objects.order_by("-id")		
+
+		return render(request, 'libros.html',{'libros' : Contexto['modelo'], 'paginator': Contexto, 'autores' : autores, 'mensaje' : mensaje})
+
+
+	libros = Libros.objects.order_by("-id")
+	result_list  =  Paginator(libros, 20)
+
+	try:
+		page = int(request.GET.get('page'));
+	except:
+		page = 1
+	if (page < result_list.page(page)):
+		pagina = result_list.page(page)
+		Contexto = {'modelo': pagina.object_list, #Asignamos registros de la pagina
+			 'page': page, #Pagina Actual
+			 'pages': result_list.num_pages, #Cantidad de Paginas
+			 'has_next': pagina.has_next(), #True si hay proxima pagina
+			 'has_prev': pagina.has_previous(), #true si hay Pagina anterior
+			 'next_page': page+1, #Proxima pagina
+			 'prev_page': page-1, #Pagina Anterior
+			 }
+
+	autores = Autores.objects.order_by("-id")
+
+	return render(request, 'libros.html',{'libros' : Contexto['modelo'], 'paginator': Contexto, 'autores' : autores})
+
+def detalles_libro(request, libro_id):
+	libro = get_object_or_404(Libros, pk=libro_id)
+	return render(request, 'detalles_libro.html',{'libro' : libro})
+
+def detalles_plus_libro(request, libro_id):
+	mensaje = ''
+	if request.method == 'POST':
+		libro_v = get_object_or_404(Libros, pk=libro_id)
+		valoracion_libro = Valoracion_libros.objects.create(id_libro=libro_v, valoracion_libro=request.POST['valoracion_libro'])
+		mensaje = 'Valoracion asignada exitosamente'
+
+	libro = get_object_or_404(Libros, pk=libro_id)
+
+	valoracion_libro = Valoracion_libros.objects.filter(id_libro=libro_id)
+
+	cantidad_valoraciones = len(valoracion_libro)
+
+	valoraciones5 = 0
+	valoraciones4 = 0
+	valoraciones3 = 0
+	valoraciones2 = 0
+	valoraciones1 = 0
+
+	for valorcion_p in valoracion_libro:
+		if valorcion_p.valoracion_libro == 5:
+			valoraciones5 += 1
+		if valorcion_p.valoracion_libro == 4:
+			valoraciones4 += 1
+		if valorcion_p.valoracion_libro == 3:
+			valoraciones3 += 1
+		if valorcion_p.valoracion_libro == 2:
+			valoraciones2 += 1
+		if valorcion_p.valoracion_libro == 1:
+			valoraciones1 += 1
+
+	return render(request, 'detalles_plus_libro.html',{'libro' : libro, 'mensaje' : mensaje, 'cantidad_valoraciones' : cantidad_valoraciones, 'valoraciones5' : valoraciones5, 'valoraciones4' : valoraciones4, 'valoraciones3' : valoraciones3, 'valoraciones2' : valoraciones2, 'valoraciones1' : valoraciones1,})
+
+def emitir_reporte_libro(request, libro_id):
+	libro = get_object_or_404(Libros, pk=libro_id)
+
+	valoracion_libro = Valoracion_libros.objects.filter(id_libro=libro_id)
+
+	cantidad_valoraciones = len(valoracion_libro)
+
+	valoraciones5 = 0
+	valoraciones4 = 0
+	valoraciones3 = 0
+	valoraciones2 = 0
+	valoraciones1 = 0
+
+	for valorcion_p in valoracion_libro:
+		if valorcion_p.valoracion_libro == 5:
+			valoraciones5 += 1
+		if valorcion_p.valoracion_libro == 4:
+			valoraciones4 += 1
+		if valorcion_p.valoracion_libro == 3:
+			valoraciones3 += 1
+		if valorcion_p.valoracion_libro == 2:
+			valoraciones2 += 1
+		if valorcion_p.valoracion_libro == 1:
+			valoraciones1 += 1
+
+	return render(request, 'reporte_libro.html',{'libro' : libro, 'cantidad_valoraciones' : cantidad_valoraciones, 'valoraciones5' : valoraciones5, 'valoraciones4' : valoraciones4, 'valoraciones3' : valoraciones3, 'valoraciones2' : valoraciones2, 'valoraciones1' : valoraciones1,})
+
 
 def busqueda_material(request):
-	return render(request, 'busqueda_material.html')
+	if request.method == 'POST':
+
+		mensaje = ''
+		mensaje2 = ''
+
+		peliculas = Peliculas.objects.filter(titulo_original__icontains=request.POST['busqueda_material'])
+
+		libros = Libros.objects.filter(titulo_libro__icontains=request.POST['busqueda_material'])
+
+		if len(peliculas) <= 0:
+			mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
+
+		if len(libros) <= 0:
+			mensaje2 = 'No se han encontrado libros con esos parametros de busqueda.'
+
+		return render(request, 'busqueda_material.html',{'peliculas' : peliculas, 'libros' : libros, 'mensaje' : mensaje, 'mensaje2' : mensaje2})
+
+	else:
+		return redirect('/inicio-sesion')
 
 
 # VIEWS PANEL

@@ -43,9 +43,9 @@
 				<li><a href="/libros"><span class="iconocolor fa fa-book fa-md"></span>&nbsp;&nbsp;Libros</a></li>          
 			</ul>
 
-			<form class="navbar-form navbar-right" role="search">
+			<form class="navbar-form navbar-right" role="search" method="post" action="/busqueda-material/">{% csrf_token %}
 				<div class="from-group">
-					<input type="text" class="form-control" placeholder="Pelicula o Libro" required>
+					<input type="search" name="busqueda_material" id="busqueda_material" maxlength="100" onkeypress="return permite(event, 'num_car')" class="form-control" placeholder="Pelicula o Libro" required>
 					<button type="submit" class="btn btn-danger"><span class="iconocolor fa fa-search fa-lg"></span>&nbsp;&nbsp;Buscar</button>
 				</div>				
 			</form>
@@ -58,29 +58,144 @@
 			<hr class="hr-division">
         
 			<div class="col-xs-4">
-				<img class="afiche_detalles_plus" src="{% static 'img/pel3.jpg' %}">
-				<br><br>
-				<a href="#" class="btn btn-primary btn-lg"><i class="fa fa-download fa-lg"></i>&nbsp;&nbsp;&nbsp;Descargar Libro</a>
-				<br><br>
+				{% if libro.libro_afiche %}
+                    <img class="afiche_detalles_plus" src="/static/media/{{ libro.libro_afiche }}">
+                    {% else %}
+                    <img class="afiche_detalles_plus" src="{% static 'img/icono_libro.png' %}">
+                {% endif %}
+
+				<br><br>			
+				<a href="/static/media/{{ libro.libro_digital }}" class="btn btn-primary btn-md"><i class="fa fa-download fa-lg"></i>&nbsp;&nbsp;&nbsp;Descargar Libro</a>
+
+
+                {% if libro.libro_ficha %}
+                	<br><br>
+                    <a href="/static/media/{{ libro.libro_ficha }}" class="btn btn-primary btn-md"><i class="fa fa-download fa-lg"></i>&nbsp;&nbsp;&nbsp;Descargar Ficha</a>                    
+                {% endif %}
         	</div>
 
         	<div class="col-xs-8">
-				<p class="texto_medio"><b class="text_azul">Titulo Libro:</b>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                <p class="texto_medio"><b class="text_azul">Autor:</b>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                <p class="texto_medio"><b class="text_azul">ISBN:</b>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+				<p class="texto_medio"><b class="text_azul">Titulo Libro:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.titulo_libro }}</p>
+                <p class="texto_medio"><b class="text_azul">Autor:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.autor }}</p>
 
-                
-                    <p class="texto_medio"><b class="text_azul">Edicion:</b>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                
-                
-                
-                    <p class="texto_medio"><b class="text_azul">Publicacion:</b>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                
-                
-               
-                    <p class="texto_medio"><b class="text_azul">Descripcion:</b>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                {% if libro.isbn %}
+                <p class="texto_medio"><b class="text_azul">ISBN:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.isbn }}</p>
+                {% endif %}
 
-                <!-- <h1>GRAFICOS ESTADISTICOS</h1> -->
+                {% if libro.edicion %}
+                <p class="texto_medio"><b class="text_azul">Edicion:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.edicion }}</p>
+                {% endif %}
+                
+                {% if libro.publicacion %}
+                <p class="texto_medio"><b class="text_azul">Publicacion:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.publicacion }}</p>
+                {% endif %}
+                
+            	{% if libro.descripcion %}
+                <p class="texto_medio"><b class="text_azul">Descripcion:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.descripcion }}</p>
+                {% endif %}
+                <br>
+
+                <h2>Valoraciones</h2>
+				<hr class="hr-division">
+
+				<h4>Asigna una valoración a este libro</h4>
+
+				{% if mensaje %}
+                    <div class="alert alert-info text-center" role="alert"><b>{{ mensaje }}</b></div>                    
+                {% endif %}
+
+                <div id="resultado_invalido"></div>
+				<form role="form" id="form-libro-valorar" method="post" action="/detalles-plus-libro/{{ libro.id }}/">{% csrf_token %}
+
+	                <div class="form-group row">                                        
+	                    <div class="col-xs-6">
+	                        <select name="valoracion_libro" id="valoracion_libro" class="form-control">
+	                            <option value="0">Selecciona una valoración</option>
+	                            <option value="5">5 Puntos</option>
+	                            <option value="4">4 Puntos</option>
+	                            <option value="3">3 Puntos</option>
+	                            <option value="2">2 Puntos</option>
+	                            <option value="1">1 Punto</option>
+	                        </select>
+	                    </div>
+	                    <div class="col-xs-6">
+							<button type="submit" class="btn btn-primary btn-md btn-block">Asignar Valoración</button>
+	                    </div>
+	                </div>
+
+            	</form>
+
+            	<br>
+
+				<script src="{% static 'js/jquery.min.js' %}"></script>
+				<script src="{% static 'js/bootstrap.min.js' %}"></script>
+				<script src="{% static 'js/Chart.min.js' %}"></script>
+				<script src="{% static 'js/main.js' %}"></script>
+
+				<input name="cantidad_valoraciones" id="cantidad_valoraciones" type="hidden" value="Cantidad Total de valoraciones: {{ cantidad_valoraciones }}">
+				<input name="valoraciones5" id="valoraciones5" type="hidden" value="{{ valoraciones5 }}">
+				<input name="valoraciones4" id="valoraciones4" type="hidden" value="{{ valoraciones4 }}">
+				<input name="valoraciones3" id="valoraciones3" type="hidden" value="{{ valoraciones3 }}">
+				<input name="valoraciones2" id="valoraciones2" type="hidden" value="{{ valoraciones2 }}">
+				<input name="valoraciones1" id="valoraciones1" type="hidden" value="{{ valoraciones1 }}">
+
+
+				<canvas id="canvas"></canvas>
+				<script language = javascript>
+				    var data = {
+					    labels: ["5 Puntos", "4 Puntos", "3 Puntos", "2 Puntos", "1 Punto"],
+					    datasets: [
+					        {
+					            label: $('#cantidad_valoraciones').val(),
+					            fillColor: "rgba(220,220,220,0.5)",
+					            strokeColor: "rgba(220,220,220,0.8)",
+					            highlightFill: "rgba(220,220,220,0.75)",
+					            highlightStroke: "rgba(220,220,220,1)",
+					            data: [$('#valoraciones5').val(), $('#valoraciones4').val(), $('#valoraciones3').val(), $('#valoraciones2').val(), $('#valoraciones1').val()]
+					        }
+					    ]
+					};
+
+					window.onload = function() {
+			            var ctx = document.getElementById("canvas").getContext("2d");
+			            window.myBar = new Chart(ctx, {
+			                type: 'bar',
+			                data: data,
+			                options: {
+			                	responsive: true,
+			                	scales: {
+									yAxes: [{
+											ticks: {
+												beginAtZero:true
+											}
+										}]
+								},							
+			                    elements: {
+			                        rectangle: {
+			                            borderWidth: 2,
+			                            borderColor: 'rgb(59,89,152)',
+			                            backgroundColor: 'rgba(139,157,195,0.7)',
+			                            borderSkipped: 'bottom'
+			                        }
+			                    },			                    
+			                    legend: {
+			                        position: 'top',
+			                    },
+			                    title: {
+			                        display: true,
+			                        text: 'Estadistica de las Valoraciones'
+			                    }
+			                }
+			            });
+			        };
+
+				</script>
+
+				<br><br>
+				<a href="/emitir-reporte-libro/{{ libro.id }}/" target="_blank" class="btn btn-primary btn-md pull-right"><i class="fa fa-print fa-lg"></i>&nbsp;&nbsp;&nbsp;Emitir Reporte</a>
+
+				<br><br>
+
         	</div>
 
         </div>
@@ -91,10 +206,6 @@
 	<footer id="pie">
         <p><span class="fa fa-copyright fa-1x"></span> {% now "Y" %} Fundación Villa del Cine Adscrito al Ministerio del Poder Popular para la Comunicación y la Información<br>Todos los derechos reservados.</p>
     </footer>
-
-<!-- Scripts -->
-	<script src="{% static 'js/jquery.min.js' %}"></script>
-	<script src="{% static 'js/bootstrap.min.js' %}"></script>
 
 </body>
 </html>

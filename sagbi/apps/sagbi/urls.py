@@ -3,12 +3,15 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns('',
 	url(r'^$', 'apps.sagbi.views.index', name="index"),
 	url(r'^peliculas/$', 'apps.sagbi.views.peliculas', name="peliculas"),
-	url(r'^detalles-pelicula/$', 'apps.sagbi.views.detalles_pelicula', name="detalles_pelicula"),
-	url(r'^detalles-plus-pelicula/$', 'apps.sagbi.views.detalles_plus_pelicula', name="detalles_plus_pelicula"),
+	url(r'^detalles-pelicula/(?P<pelicula_id>[0-9]+)/$', 'apps.sagbi.views.detalles_pelicula', name="detalles_pelicula"),
+	url(r'^detalles-plus-pelicula/(?P<pelicula_id>[0-9]+)/$', 'apps.sagbi.views.detalles_plus_pelicula', name="detalles_plus_pelicula"),
 	url(r'^libros/$', 'apps.sagbi.views.libros', name="libros"),
-	url(r'^detalles-libro/$', 'apps.sagbi.views.detalles_libro', name="detalles_libro"),
-	url(r'^detalles-plus-libro/$', 'apps.sagbi.views.detalles_plus_libro', name="detalles_plus_libro"),
+	url(r'^detalles-libro/(?P<libro_id>[0-9]+)/$', 'apps.sagbi.views.detalles_libro', name="detalles_libro"),
+	url(r'^detalles-plus-libro/(?P<libro_id>[0-9]+)/$', 'apps.sagbi.views.detalles_plus_libro', name="detalles_plus_libro"),
 	url(r'^busqueda-material/$', 'apps.sagbi.views.busqueda_material', name="busqueda_material"),
+	url(r'^reproducir-pelicula/(?P<pelicula_id>[0-9]+)/$', 'apps.sagbi.views.reproducir_pelicula', name="reproducir_pelicula"),
+	url(r'^emitir-reporte-pelicula/(?P<pelicula_id>[0-9]+)/$', 'apps.sagbi.views.emitir_reporte_pelicula', name="emitir_reporte_pelicula"),
+	url(r'^emitir-reporte-libro/(?P<libro_id>[0-9]+)/$', 'apps.sagbi.views.emitir_reporte_libro', name="emitir_reporte_libro"),
 
 	# URLS PANEL
 

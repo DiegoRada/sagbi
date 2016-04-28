@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>..:: SAGBI ::..</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/logo.png' %}">
+
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/metisMenu.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/sb-admin-2.css' %}" rel="stylesheet">
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="centrado_login">
+                    <br>
+                    <img class="img-responsive " src="{% static 'img/logo.png' %}">                    
+                    <h3 class="rojo">SAGBI</h3> 
+                </div>                
+
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Error 404</h3>
+                    </div>
+                    <div class="panel-body">
+                        <h3 class="text-center">Pagina no Encontrada</h3>
+                        <br>
+                        <h4>El contenido que ha buscado no ha sido encontrado, es posible que se haya eliminado o que ya no exista en este sistema.</h4>
+                        <br>                
+                        <a href="/" class="btn btn-primary btn-md btn-block"><i class="fa fa-home fa-lg"></i>&nbsp;&nbsp;&nbsp;Volver a la Pagina Principal</a>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script> 
+    <script src="{% static 'js/metisMenu.min.js' %}"></script>
+    <script src="{% static 'js/sb-admin-2.js' %}"></script>
+
+</body>
+</html>

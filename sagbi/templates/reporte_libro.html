@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+    <title>..:: SAGBI ::..</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/logo.png' %}">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" >
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+</head>
+<body>
+<!-- Cintillo -->
+    <div class="container">             
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-2"><img class="img-responsive logo" src="{% static 'img/logo.png' %}"></div>
+            <div class="col-lg-8"><h2 class="titulo_principal_reporte">Sistema Automatizado de Gestion de Bibliotecas<br><p class="rojo">(SAGBI)</p></h2></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <h2>Reporte del libro</h2>
+            <hr class="hr-division">
+
+            <div class="col-xs-4">
+                {% if libro.libro_afiche %}
+                    <img class="afiche_detalles_plus" src="/static/media/{{ libro.libro_afiche }}">
+                    {% else %}
+                    <img class="afiche_detalles_plus" src="{% static 'img/icono_libro.png' %}">
+                {% endif %}
+                <br><br>
+            </div>
+
+            <div class="col-xs-8">
+                <p class="texto_medio"><b class="text_azul">Titulo Libro:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.titulo_libro }}</p>
+                <p class="texto_medio"><b class="text_azul">Autor:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.autor }}</p>
+
+                {% if libro.isbn %}
+                <p class="texto_medio"><b class="text_azul">ISBN:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.isbn }}</p>
+                {% endif %}
+
+                {% if libro.edicion %}
+                <p class="texto_medio"><b class="text_azul">Edicion:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.edicion }}</p>
+                {% endif %}
+                
+                {% if libro.publicacion %}
+                <p class="texto_medio"><b class="text_azul">Publicacion:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.publicacion }}</p>
+                {% endif %}
+                
+                {% if libro.descripcion %}
+                <p class="texto_medio"><b class="text_azul">Descripcion:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.descripcion }}</p>
+                {% endif %}
+            </div>
+
+            <div class="col-xs-12">
+
+                <h2>Valoraciones</h2>
+                <hr class="hr-division">
+                <br>
+
+                <script src="{% static 'js/jquery.min.js' %}"></script>
+                <script src="{% static 'js/bootstrap.min.js' %}"></script>
+                <script src="{% static 'js/Chart.min.js' %}"></script>
+                <script src="{% static 'js/main.js' %}"></script>
+
+                <input name="cantidad_valoraciones" id="cantidad_valoraciones" type="hidden" value="Cantidad Total de valoraciones: {{ cantidad_valoraciones }}">
+                <input name="valoraciones5" id="valoraciones5" type="hidden" value="{{ valoraciones5 }}">
+                <input name="valoraciones4" id="valoraciones4" type="hidden" value="{{ valoraciones4 }}">
+                <input name="valoraciones3" id="valoraciones3" type="hidden" value="{{ valoraciones3 }}">
+                <input name="valoraciones2" id="valoraciones2" type="hidden" value="{{ valoraciones2 }}">
+                <input name="valoraciones1" id="valoraciones1" type="hidden" value="{{ valoraciones1 }}">
+
+
+                <canvas id="canvas"></canvas>
+                <script language = javascript>
+                    var data = {
+                        labels: ["5 Puntos", "4 Puntos", "3 Puntos", "2 Puntos", "1 Punto"],
+                        datasets: [
+                            {
+                                label: $('#cantidad_valoraciones').val(),
+                                fillColor: "rgba(220,220,220,0.5)",
+                                strokeColor: "rgba(220,220,220,0.8)",
+                                highlightFill: "rgba(220,220,220,0.75)",
+                                highlightStroke: "rgba(220,220,220,1)",
+                                data: [$('#valoraciones5').val(), $('#valoraciones4').val(), $('#valoraciones3').val(), $('#valoraciones2').val(), $('#valoraciones1').val()]
+                            }
+                        ]
+                    };
+
+                    window.onload = function() {
+                        var ctx = document.getElementById("canvas").getContext("2d");
+                        window.myBar = new Chart(ctx, {
+                            type: 'bar',
+                            data: data,
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    yAxes: [{
+                                            ticks: {
+                                                beginAtZero:true
+                                            }
+                                        }]
+                                },                          
+                                elements: {
+                                    rectangle: {
+                                        borderWidth: 2,
+                                        borderColor: 'rgb(59,89,152)',
+                                        backgroundColor: 'rgba(139,157,195,0.7)',
+                                        borderSkipped: 'bottom'
+                                    }
+                                },                              
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Estadistica de las Valoraciones'
+                                }
+                            }
+                        });
+                    };
+
+                </script>
+                
+                <br><br>
+                <a href='javascript:window.print(); void 0;' class="btn btn-primary btn-md pull-right"><i class="fa fa-print fa-lg"></i>&nbsp;&nbsp;&nbsp;Descargar o Imprimir Reporte</a>
+
+                <br><br>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

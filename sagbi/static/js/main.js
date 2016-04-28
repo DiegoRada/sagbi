@@ -474,6 +474,53 @@ function validar_libro(){
     return true;
 }
 
+function validar_valoracion_pelicula(){
+
+    if(document.getElementById("valoracion_pelicula").value == 0){
+        $("#resultado_invalido").html('<div class="alert alert-danger text-center" role="alert"><b>Debe seleccionar una valoracion, por favor verifique sus datos.</b></div>');
+        document.getElementById("valoracion_pelicula").focus();
+        return false;
+    }
+
+    $("#resultado_invalido").html('<p class="msg-azul">Procesando, espere por favor...</p>');
+
+    return true;
+}
+
+function validar_valoracion_libro(){
+
+    if(document.getElementById("valoracion_libro").value == 0){
+        $("#resultado_invalido").html('<div class="alert alert-danger text-center" role="alert"><b>Debe seleccionar una valoracion, por favor verifique sus datos.</b></div>');
+        document.getElementById("valoracion_libro").focus();
+        return false;
+    }
+
+    $("#resultado_invalido").html('<p class="msg-azul">Procesando, espere por favor...</p>');
+
+    return true;
+}
+
+function validar_filtro_pelicula(){
+
+    if(document.getElementById("pais").value == 0 && document.getElementById("director").value == 0 && document.getElementById("anio").value == ''){
+        $("#resultado_invalido").html('<div class="alert alert-danger text-center" role="alert"><b>Debe seleccionar un parametro para filtrar, por favor verifique sus datos.</b></div>');
+        return false;
+    }
+
+    return true;
+}
+
+function validar_filtro_libro(){
+
+    if(document.getElementById("autor").value == 0){
+        $("#resultado_invalido").html('<div class="alert alert-danger text-center" role="alert"><b>Debe seleccionar un parametro para filtrar, por favor verifique sus datos.</b></div>');
+        document.getElementById("autor").focus();
+        return false;
+    }
+
+    return true;
+}
+
 $(document).ready(function() {
 
     $('#form-login').submit(function(){ 
@@ -524,6 +571,19 @@ $(document).ready(function() {
     $('#form-libro').submit(function(){ 
         return validar_libro(); 
     });
+
+    $('#form-pelicula-valorar').submit(function(){ 
+        return validar_valoracion_pelicula(); 
+    });
+
+    $('#form-filtro-pelicula').submit(function(){ 
+        return validar_filtro_pelicula(); 
+    });
+
+    $('#form-filtro-libro').submit(function(){ 
+        return validar_filtro_libro(); 
+    });
+
 
 
  });

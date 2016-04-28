@@ -43,9 +43,9 @@
 				<li><a href="/libros"><span class="iconocolor fa fa-book fa-md"></span>&nbsp;&nbsp;Libros</a></li>          
 			</ul>
 
-			<form class="navbar-form navbar-right" role="search" action="/busqueda-material">
+			<form class="navbar-form navbar-right" role="search" method="post" action="/busqueda-material/">{% csrf_token %}
 				<div class="from-group">
-					<input type="text" class="form-control" placeholder="Pelicula o Libro" required>
+					<input type="search" name="busqueda_material" id="busqueda_material" maxlength="100" onkeypress="return permite(event, 'num_car')" class="form-control" placeholder="Pelicula o Libro" required>
 					<button type="submit" class="btn btn-danger"><span class="iconocolor fa fa-search fa-lg"></span>&nbsp;&nbsp;Buscar</button>
 				</div>				
 			</form>
@@ -56,28 +56,19 @@
 		<div class="row">
 			<h2>Peliculas</h2>
 			<hr class="hr-division">
-        
-			<div class="col-xs-3">
-				<a data-toggle="modal" data-target="#detalles_pelicula" href="/detalles-pelicula">
-					<img class="afiche" src="{% static 'img/pel1.jpg' %}">
-					<p class="enlace titulo-multi-material">Titulo del Material</p>
-				</a>
-        	</div>
 
-        	<div class="col-xs-3">
-				<img class="afiche" src="{% static 'img/pel2.jpg' %}">
-				<p class="enlace titulo-multi-material">Titulo del Material</p>
-        	</div>
-
-        	<div class="col-xs-3">
-				<img class="afiche" src="{% static 'img/pel3.jpg' %}">
-				<p class="enlace titulo-multi-material">Titulo del Material</p>
-        	</div>
-
-        	<div class="col-xs-3">
-				<img class="afiche" src="{% static 'img/pel4.jpg' %}">
-				<p class="enlace titulo-multi-material">Titulo del Material</p>
-        	</div>
+			{% for pelicula in peliculas %}
+				<div class="col-xs-3">
+					<a class="ref-material" data-toggle="modal" data-target="#detalles_pelicula" href="/detalles-pelicula/{{ pelicula.id }}/">
+						{% if pelicula.pelicula_afiche %}
+			                <img class="afiche" src="/static/media/{{ pelicula.pelicula_afiche }}">
+			                {% else %}
+			                <img class="afiche" src="{% static 'img/icono_pelicula.jpg' %}">
+			            {% endif %}
+						<p class="enlace titulo-multi-material">{{ pelicula.titulo_original }}</p>
+					</a>
+	        	</div>				
+			{% endfor %}
 
         </div>
     </div>
@@ -89,28 +80,19 @@
 			<h2>Libros</h2>
 			<hr class="hr-division">
 
-			<div class="col-xs-3">
-				<a data-toggle="modal" data-target="#detalles_libro" href="/detalles-libro">
-					<img class="afiche" src="{% static 'img/pel1.jpg' %}">
-					<p class="enlace titulo-multi-material">Titulo del Material</p>
-				</a>
-        	</div>
-
-        	<div class="col-xs-3">
-				<img class="afiche" src="{% static 'img/pel2.jpg' %}">
-				<p class="enlace titulo-multi-material">Titulo del Material</p>
-        	</div>
-
-        	<div class="col-xs-3">
-				<img class="afiche" src="{% static 'img/pel3.jpg' %}">
-				<p class="enlace titulo-multi-material">Titulo del Material</p>
-        	</div>
-
-        	<div class="col-xs-3">
-				<img class="afiche" src="{% static 'img/pel4.jpg' %}">
-				<p class="enlace titulo-multi-material">Titulo del Material</p>
-        	</div>
-        	
+			{% for libro in libros %}
+				<div class="col-xs-3">
+					<a class="ref-material" data-toggle="modal" data-target="#detalles_libro" href="/detalles-libro/{{ libro.id }}/">
+						{% if libro.libro_afiche %}
+			                <img class="afiche" src="/static/media/{{ libro.libro_afiche }}">
+			                {% else %}
+			                <img class="afiche" src="{% static 'img/icono_libro.png' %}">
+			            {% endif %}
+						<p class="enlace titulo-multi-material">{{ libro.titulo_libro }}</p>
+					</a>
+	        	</div>				
+			{% endfor %}
+	
         </div>
     </div>
 
@@ -137,6 +119,7 @@
 <!-- Scripts -->
 	<script src="{% static 'js/jquery.min.js' %}"></script>
 	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
 
 </body>
 </html>

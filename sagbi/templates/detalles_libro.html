@@ -1,36 +1,43 @@
 {% load static %}
 <div class="modal-header">
-    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-    <h4 class="modal-title">Detalles del Libro</h4>
+    <h3 class="modal-title">{{ libro.titulo_libro }}</h3>
 </div>
 
 <div class="modal-body modal-detalles">
     <div class="container">      
         <div class="row">
             <div class="col-md-3">
-                <img class="afiche afiche_detalles" src="{% static 'img/pel3.jpg' %}">
+                {% if libro.libro_afiche %}
+                    <img class="afiche afiche_detalles" src="/static/media/{{ libro.libro_afiche }}">
+                    {% else %}
+                    <img class="afiche afiche_detalles" src="{% static 'img/icono_libro.png' %}">
+                {% endif %}
             </div>
             <div class="col-md-6">
 
-                <p class="texto_medio"><b class="text_azul">Titulo Libro:</b>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                <p class="texto_medio"><b class="text_azul">Autor:</b>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                <p class="texto_medio"><b class="text_azul">ISBN:</b>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <p class="texto_medio"><b class="text_azul">Título del Libro:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.titulo_libro }}</p>
 
-                
-                    <p class="texto_medio"><b class="text_azul">Edicion:</b>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                
-                
-                
-                    <p class="texto_medio"><b class="text_azul">Publicacion:</b>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                
-                
-               
-                    <p class="texto_medio"><b class="text_azul">Descripcion:</b>&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                
+                    <p class="texto_medio"><b class="text_azul">Autor:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.autor }}</p>
+
+                {% if libro.isbn %}
+                    <p class="texto_medio"><b class="text_azul">ISBN:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.isbn }}</p>
+                {% endif %}
+
+                {% if libro.edicion %}                
+                    <p class="texto_medio"><b class="text_azul">Edicion:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.edicion }}</p>
+                {% endif %}
+
+                {% if libro.publicacion %}
+                    <p class="texto_medio"><b class="text_azul">Publicacion:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.publicacion }}</p>
+                {% endif %}
+
+                {% if libro.descripcion %}
+                    <p class="texto_medio"><b class="text_azul">Descripcion:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ libro.descripcion }}</p>
+                {% endif %}
 
                 <br> 
 
-                <a type="button" class="btn btn-primary btn-md btn-block" href="/detalles-plus-libro">Ver mas detalles</a>
+                <a type="button" class="btn btn-primary btn-md btn-block" href="/detalles-plus-libro/{{ libro.id }}/">Ver mas detalles</a>
                 <a type="button" class="btn btn-info btn-md btn-block" href="/libros">Volver</a>
             </div>
 

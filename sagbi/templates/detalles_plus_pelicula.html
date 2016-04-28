@@ -43,9 +43,9 @@
 				<li><a href="/libros"><span class="iconocolor fa fa-book fa-md"></span>&nbsp;&nbsp;Libros</a></li>          
 			</ul>
 
-			<form class="navbar-form navbar-right" role="search">
+			<form class="navbar-form navbar-right" role="search" method="post" action="/busqueda-material/">{% csrf_token %}
 				<div class="from-group">
-					<input type="text" class="form-control" placeholder="Pelicula o Libro" required>
+					<input type="search" name="busqueda_material" id="busqueda_material" maxlength="100" onkeypress="return permite(event, 'num_car')" class="form-control" placeholder="Pelicula o Libro" required>
 					<button type="submit" class="btn btn-danger"><span class="iconocolor fa fa-search fa-lg"></span>&nbsp;&nbsp;Buscar</button>
 				</div>				
 			</form>
@@ -58,72 +58,198 @@
 			<hr class="hr-division">
         
 			<div class="col-xs-4">
-				<img class="afiche_detalles_plus" src="{% static 'img/pel4.jpg' %}">
+				{% if pelicula.pelicula_afiche %}
+                    <img class="afiche_detalles_plus" src="/static/media/{{ pelicula.pelicula_afiche }}">
+                    {% else %}
+                    <img class="afiche_detalles_plus" src="{% static 'img/icono_pelicula.jpg' %}">
+                {% endif %}
 				<br><br>
-				<a href=""><img class="img_reproductor" src="{% static 'img/reproductor.jpg' %}"></a>
+				<a data-toggle="modal" data-target="#reproducir_pelicula" href="/reproducir-pelicula/{{ pelicula.id }}/">
+					<img class="img_reproductor" src="{% static 'img/reproductor.jpg' %}">
+				</a>
+
+				<br><br>				
+				<a href="/static/media/{{ pelicula.pelicula_digital }}" class="btn btn-primary btn-md"><i class="fa fa-download fa-lg"></i>&nbsp;&nbsp;&nbsp;Descargar Pelicula</a>
+
 				<br><br>
-				<a href="#" class="btn btn-primary btn-lg"><i class="fa fa-download fa-lg"></i>&nbsp;&nbsp;&nbsp;Descargar Pelicula</a>
+				{% if pelicula.subtitulo %}
+                    <a href="/static/media/{{ pelicula.subtitulo }}" class="btn btn-primary btn-md"><i class="fa fa-download fa-lg"></i>&nbsp;&nbsp;&nbsp;Descargar Subtitulos</a>
+                    <br><br>
+                {% endif %}
+
+                {% if pelicula.pelicula_ficha %}
+                    <a href="/static/media/{{ pelicula.pelicula_ficha }}" class="btn btn-primary btn-md"><i class="fa fa-download fa-lg"></i>&nbsp;&nbsp;&nbsp;Descargar Ficha</a>
+                    <br><br>
+                {% endif %}
         	</div>
 
         	<div class="col-xs-8">
-				<p class="texto_medio"><b class="text_azul">Titulo Traducido:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['cedula_invitado']; ?></p>
-                <p class="texto_medio"><b class="text_azul">Año:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['nombre_invitado']; ?></p>
-                <p class="texto_medio"><b class="text_azul">Duracion:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['apellido_invitado']; ?></p>
 
-                <?php if ($fila['placa']): ?>
-                    <p class="texto_medio"><b class="text_azul">Pais:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['placa']; ?></p>
-                <?php endif ?>
-                
-                <?php if ($fila['telefono_movil_invitado']): ?>
-                    <p class="texto_medio"><b class="text_azul">director:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['telefono_movil_invitado']; ?></p>
-                <?php endif ?>
-                
-                <?php if ($fila['telefono_fijo_invitado']): ?>
-                    <p class="texto_medio"><b class="text_azul">Guion:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['telefono_fijo_invitado']; ?></p>
-                <?php endif ?>
+					<p class="texto_medio_plus"><b class="text_azul">Titulo Original:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ pelicula.titulo_original }}</p>
 
-                <?php if ($fila['fecha']): ?>
-                    <p class="texto_medio"><b class="text_azul">Fotografia:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['fecha']; ?></p>
-                <?php endif ?>
+				{% if pelicula.titulo_traducido %}
+                    <p class="texto_medio_plus"><b class="text_azul">Titulo Traducido:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ pelicula.titulo_traducido }}</p>
+                {% endif %}
 
-                <?php if ($fila['nombre']): ?>
-                    <p class="texto_medio"><b class="text_azul">Reparto:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['nombre']." ".$fila['apellido']; ?></p>
-                <?php endif ?>
+                    <p class="texto_medio_plus"><b class="text_azul">Año:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ pelicula.anio }}</p>
 
-                <?php if ($fila['departamento']): ?>
-                    <p class="texto_medio"><b class="text_azul">Productora:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['departamento']; ?></p>
-                <?php endif ?>
+                    <p class="texto_medio_plus"><b class="text_azul">Duracion:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ pelicula.duracion }}</p>
 
-                <?php if ($fila['estatus']): ?>
-                    <p class="texto_medio"><b class="text_azul">Sinopsis:</b>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $fila['estatus']; ?></p>
-                <?php endif ?>
+                    <p class="texto_medio_plus"><b class="text_azul">Pais:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ pelicula.pais }}</p>
+
+                    <p class="texto_medio_plus"><b class="text_azul">director:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ pelicula.director }}</p>
+
+                {% if pelicula.guion %}
+                    <p class="texto_medio_plus"><b class="text_azul">Guion:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ pelicula.guion }}</p>
+                {% endif %}
+
+                {% if pelicula.fotografia %}
+                    <p class="texto_medio_plus"><b class="text_azul">Fotografia:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ pelicula.fotografia }}</p>
+                {% endif %}
+
+                {% if pelicula.reparto %}
+                    <p class="texto_medio_plus"><b class="text_azul">Reparto:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ pelicula.reparto }}</p>
+                {% endif %}
+
+                {% if pelicula.productora %}
+                    <p class="texto_medio_plus"><b class="text_azul">Productora:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ pelicula.productora }}</p>
+                {% endif %}
+
+                {% if pelicula.sinopsis %}
+                    <p class="texto_medio_plus"><b class="text_azul">Sinopsis:</b>&nbsp;&nbsp;&nbsp;&nbsp;{{ pelicula.sinopsis }}</p>
+                {% endif %}
+
+                <br>
+
+                <h2>Valoraciones</h2>
+				<hr class="hr-division">
+
+				<h4>Asigna una valoración a esta pelicula</h4>
+
+				{% if mensaje %}
+                    <div class="alert alert-info text-center" role="alert"><b>{{ mensaje }}</b></div>                    
+                {% endif %}
+
+				<div id="resultado_invalido"></div>
+				<form role="form" id="form-pelicula-valorar" method="post" action="/detalles-plus-pelicula/{{ pelicula.id }}/">{% csrf_token %}
+
+	                <div class="form-group row">                                        
+	                    <div class="col-xs-6">
+	                        <select name="valoracion_pelicula" id="valoracion_pelicula" class="form-control">
+	                            <option value="0">Selecciona una valoración</option>
+	                            <option value="5">5 Puntos</option>
+	                            <option value="4">4 Puntos</option>
+	                            <option value="3">3 Puntos</option>
+	                            <option value="2">2 Puntos</option>
+	                            <option value="1">1 Punto</option>
+	                        </select>
+	                    </div>
+	                    <div class="col-xs-6">
+							<button type="submit" class="btn btn-primary btn-md btn-block">Asignar Valoración</button>
+	                    </div>
+	                </div>
+
+            	</form>
+
+            	<br>
+
+				<script src="{% static 'js/jquery.min.js' %}"></script>
+				<script src="{% static 'js/bootstrap.min.js' %}"></script>
+				<script src="{% static 'js/Chart.min.js' %}"></script>
+				<script src="{% static 'js/main.js' %}"></script>
+
+				<input name="cantidad_valoraciones" id="cantidad_valoraciones" type="hidden" value="Cantidad Total de valoraciones: {{ cantidad_valoraciones }}">
+				<input name="valoraciones5" id="valoraciones5" type="hidden" value="{{ valoraciones5 }}">
+				<input name="valoraciones4" id="valoraciones4" type="hidden" value="{{ valoraciones4 }}">
+				<input name="valoraciones3" id="valoraciones3" type="hidden" value="{{ valoraciones3 }}">
+				<input name="valoraciones2" id="valoraciones2" type="hidden" value="{{ valoraciones2 }}">
+				<input name="valoraciones1" id="valoraciones1" type="hidden" value="{{ valoraciones1 }}">
 
 
-                <!-- <h1>GRAFICOS ESTADISTICOS</h1> -->
+				<canvas id="canvas"></canvas>
+				<script language = javascript>
+				    var data = {
+					    labels: ["5 Puntos", "4 Puntos", "3 Puntos", "2 Puntos", "1 Punto"],
+					    datasets: [
+					        {
+					            label: $('#cantidad_valoraciones').val(),
+					            fillColor: "rgba(220,220,220,0.5)",
+					            strokeColor: "rgba(220,220,220,0.8)",
+					            highlightFill: "rgba(220,220,220,0.75)",
+					            highlightStroke: "rgba(220,220,220,1)",
+					            data: [$('#valoraciones5').val(), $('#valoraciones4').val(), $('#valoraciones3').val(), $('#valoraciones2').val(), $('#valoraciones1').val()]
+					        }
+					    ]
+					};
+
+					window.onload = function() {
+			            var ctx = document.getElementById("canvas").getContext("2d");
+			            window.myBar = new Chart(ctx, {
+			                type: 'bar',
+			                data: data,
+			                options: {
+			                	responsive: true,
+			                	scales: {
+									yAxes: [{
+											ticks: {
+												beginAtZero:true
+											}
+										}]
+								},							
+			                    elements: {
+			                        rectangle: {
+			                            borderWidth: 2,
+			                            borderColor: 'rgb(59,89,152)',
+			                            backgroundColor: 'rgba(139,157,195,0.7)',
+			                            borderSkipped: 'bottom'
+			                        }
+			                    },			                    
+			                    legend: {
+			                        position: 'top',
+			                    },
+			                    title: {
+			                        display: true,
+			                        text: 'Estadistica de las Valoraciones'
+			                    }
+			                }
+			            });
+			        };
+
+				</script>
+
+				<br><br>
+				<a href="/emitir-reporte-pelicula/{{ pelicula.id }}/" target="_blank" class="btn btn-primary btn-md pull-right"><i class="fa fa-print fa-lg"></i>&nbsp;&nbsp;&nbsp;Emitir Reporte</a>
+
         	</div>
 
         </div>
         <div class="row">
         	<div class="col-xs-12">
-        		<br>
-	        	<p class="texto_medio"><b class="text_azul">Criticas:</b>
+        		{% if pelicula.criticas %}
+        			<br>
+                    <p class="texto_medio_plus"><b class="text_azul">Criticas:</b>
+                    <br>
+                    {{ pelicula.criticas }}
+                    </p>
+                {% endif %}
 	        	<br>
-	        	La última entrega de 'Los juegos del hambre' nos muestra a una nación en guerra, en la que Katniss se enfrenta con uñas y dientes al presidente Snow (Donald Sutherland). Con la ayuda de algunos amigos, entre ellos Gale (Liam Hemsworth), Finnick (Sam Claflin) y Peeta (Josh Hutcherson), arriesgará la vida para salir del Distrito 13 y eliminar al presidente Snow.
-	        	</p>
-	        	<br><br>
 	        </div>
         </div>
     </div>
+
+    <div class="modal fade" id="reproducir_pelicula" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+	    <div class="modal-dialog modal-lg" role="document">
+	        <div class="modal-content">
+
+	        </div>
+	    </div>
+	</div>
 
     <div class="clearfix"></div>
 
 	<footer id="pie">
         <p><span class="fa fa-copyright fa-1x"></span> {% now "Y" %} Fundación Villa del Cine Adscrito al Ministerio del Poder Popular para la Comunicación y la Información<br>Todos los derechos reservados.</p>
     </footer>
-
-<!-- Scripts -->
-	<script src="{% static 'js/jquery.min.js' %}"></script>
-	<script src="{% static 'js/bootstrap.min.js' %}"></script>
 
 </body>
 </html>

@@ -43,9 +43,9 @@
 				<li><a href="/libros"><span class="iconocolor fa fa-book fa-md"></span>&nbsp;&nbsp;Libros</a></li>          
 			</ul>
 
-			<form class="navbar-form navbar-right" role="search">
+			<form class="navbar-form navbar-right" role="search" method="post" action="/busqueda-material/">{% csrf_token %}
 				<div class="from-group">
-					<input type="text" class="form-control" placeholder="Pelicula o Libro" required>
+					<input type="search" name="busqueda_material" id="busqueda_material" maxlength="100" onkeypress="return permite(event, 'num_car')" class="form-control" placeholder="Pelicula o Libro" required>
 					<button type="submit" class="btn btn-danger"><span class="iconocolor fa fa-search fa-lg"></span>&nbsp;&nbsp;Buscar</button>
 				</div>				
 			</form>
@@ -53,32 +53,27 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-offset-3 col-lg-7">
-					<form class="navbar-form">
+					<form class="navbar-form" method="post" id="form-filtro-pelicula">{% csrf_token %}
 
 						<div class="form-group">
-				            <select id="rol" name="rol" class="form-control">
-				                <option value=0>Filtrar por Año</option>
-				                <option value=1>Administrador</option>
-				                <option value=2>Empleado</option>
-				                <option value=3>Seguridad</option>
-		          			</select>
+							<input name="anio" id="anio" type="text" class="form-control input-md input_anio" placeholder='Filtrar por Año' maxlength="4" onkeypress="return permite(event, 'num')">
 			        	</div>
 
 			        	<div class="form-group">
-				            <select id="rol" name="rol" class="form-control">
+				            <select id="pais" name="pais" class="form-control">
 				                <option value=0>Filtrar por Pais</option>
-				                <option value=1>Administrador</option>
-				                <option value=2>Empleado</option>
-				                <option value=3>Seguridad</option>
+				                {% for pais in paises %}
+                                    <option value="{{ pais.id }}">{{ pais.nombre_pais }}</option>
+                                {% endfor %}
 		          			</select>
 			        	</div>
 
 			        	<div class="form-group">
-				            <select id="rol" name="rol" class="form-control">
+				            <select id="director" name="director" class="form-control">
 				                <option value=0>Filtrar por Director</option>
-				                <option value=1>Administrador</option>
-				                <option value=2>Empleado</option>
-				                <option value=3>Seguridad</option>
+				                {% for director in directores %}
+                                    <option value="{{ director.id }}">{{ director.nombre_director }}</option>
+                                {% endfor %}
 		          			</select>
 			        	</div>
 
@@ -87,6 +82,10 @@
 					</form>
 				</div>
 			</div>
+			<div id="resultado_invalido"></div>
+			{% if mensaje %}
+                <div class="alert alert-danger text-center" role="alert"><b>{{ mensaje }}</b></div>                
+            {% endif %}
 		</div>
 	</nav>
 <!-- Peliculas -->
@@ -95,27 +94,19 @@
 			<h2>Peliculas</h2>
 			<hr class="hr-division">
 
-			<div class="col-xs-3">
-				<a data-toggle="modal" data-target="#detalles_pelicula" href="/detalles-pelicula">
-					<img class="afiche" src="{% static 'img/pel1.jpg' %}">
-					<p class="enlace titulo-multi-material">Titulo del Material</p>
-				</a>
-        	</div>
+			{% for pelicula in peliculas %}
+				<div class="col-xs-3">
+					<a class="ref-material" data-toggle="modal" data-target="#detalles_pelicula" href="/detalles-pelicula/{{ pelicula.id }}/">
+						{% if pelicula.pelicula_afiche %}
+			                <img class="afiche" src="/static/media/{{ pelicula.pelicula_afiche }}">
+			                {% else %}
+			                <img class="afiche" src="{% static 'img/icono_pelicula.jpg' %}">
+			            {% endif %}
+						<p class="enlace titulo-multi-material">{{ pelicula.titulo_original }}</p>
+					</a>
+	        	</div>				
+			{% endfor %}
 
-        	<div class="col-xs-3">
-				<img class="afiche" src="{% static 'img/pel2.jpg' %}">
-				<p class="enlace titulo-multi-material">Titulo del Material</p>
-        	</div>
-
-        	<div class="col-xs-3">
-				<img class="afiche" src="{% static 'img/pel3.jpg' %}">
-				<p class="enlace titulo-multi-material">Titulo del Material</p>
-        	</div>
-
-        	<div class="col-xs-3">
-				<img class="afiche" src="{% static 'img/pel4.jpg' %}">
-				<p class="enlace titulo-multi-material">Titulo del Material</p>
-        	</div>
 
         </div>
     </div>
@@ -128,8 +119,28 @@
 	    </div>
 	</div>
 
-    <!-- <h1>HACER PAGINADO</h1> -->
 
+	<div class="container">
+		<div class="row">
+			<div class="centrado_paginado">
+				<nav>
+					<ul class="pagination">
+						<li>
+							{% if paginator.has_prev %}
+								<a href="/peliculas/?page={{ paginator.prev_page }}" aria-label="Anterior"><span aria-hidden="true">&laquo;</span></a>								
+							{% endif %}
+						</li>
+						<li class="active"><a href="#">Página {{ paginator.page }} de {{ paginator.pages }}</a></li>
+						<li>
+							{% if paginator.has_next %}
+								<a href="/peliculas/?page={{ paginator.next_page }}" aria-label="Siguiente"><span aria-hidden="true">&raquo;</span></a>								
+							{% endif %}
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
 
     <footer id="pie">
         <p><span class="fa fa-copyright fa-1x"></span> {% now "Y" %} Fundación Villa del Cine Adscrito al Ministerio del Poder Popular para la Comunicación y la Información<br>Todos los derechos reservados.</p>
@@ -138,6 +149,7 @@
 <!-- Scripts -->
 	<script src="{% static 'js/jquery.min.js' %}"></script>
 	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
 
 </body>
 </html>

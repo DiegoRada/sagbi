@@ -35,6 +35,16 @@
 	text-align: center;
 }
 
+.titulo_principal_reporte{
+	text-align: center;
+	font-size: 25px;
+	color: #C60000;
+}
+
+.input_anio{
+	width: 120px !important;
+}
+
 .rojo{
 	color: #C60000;
 }
@@ -79,6 +89,10 @@
 	margin-bottom: 20px;
 }
 
+.ref-material{
+	text-decoration: none !important;
+}
+
 #pie p {
     border-top: 1px solid #dadada;
     color: #999999;
@@ -95,6 +109,12 @@
 
 .centrado_inicio{
 	width: 800px;
+	text-align: center;
+	margin: auto;
+}
+
+.centrado_paginado{
+	width: 300px;
 	text-align: center;
 	margin: auto;
 }
@@ -140,6 +160,10 @@
 
 .texto_funcion{
 	color: #4C4C4C;
+	font-size: 16px;
+}
+
+.texto_medio_plus{
 	font-size: 16px;
 }
 
