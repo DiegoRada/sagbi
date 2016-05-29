@@ -26,7 +26,7 @@ class Peliculas(models.Model):
 	
 	titulo_original = models.CharField(max_length=150, db_index=True)
 	titulo_traducido = models.CharField(max_length=150,null=True)
-	anio = models.PositiveIntegerField()
+	anio = models.PositiveIntegerField(max_digits=5)
 	duracion = models.CharField(max_length=10)
 	pais = models.ForeignKey(Paises)
 	director = models.ForeignKey(Directores)
