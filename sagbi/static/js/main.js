@@ -539,27 +539,27 @@ $(document).ready(function() {
         return validar_cedula($('#cedula').val()); 
     });
 
-    $('#form-cedula-registro').submit(function(){
+    $('#form-cedula-registro').submit(function(event){
         event.preventDefault();
         validar_cedula_registro($('#cedula_validacion').val()); 
     });
 
-    $('#form-email').submit(function(){ 
+    $('#form-email').submit(function(event){ 
         event.preventDefault();
         validar_email($('#email_recupera').val()); 
     });
 
-    $('#form-pais').submit(function(){ 
+    $('#form-pais').submit(function(event){ 
         event.preventDefault();
         agregar_pais($('#pais').val());
     });
 
-    $('#form-director').submit(function(){ 
+    $('#form-director').submit(function(event){ 
         event.preventDefault();
         agregar_director($('#director').val());
     });
 
-    $('#form-autor').submit(function(){ 
+    $('#form-autor').submit(function(event){ 
         event.preventDefault();
         agregar_autor($('#autor').val());
     });

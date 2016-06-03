@@ -22,11 +22,7 @@ LOCAL_APPS = (
         'apps.users',
     )
 
-THIRD_PARTY_APPS = (
-        'pure_pagination',
-    )
-
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
