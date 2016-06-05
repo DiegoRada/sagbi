@@ -22,7 +22,8 @@
                                 <thead>
                                     <tr>
                                         <th><b>N°</b></th>
-                                        <th><b>País</b></th>                                        
+                                        <th><b>País</b></th>
+                                        <th><b>Estatus</b></th>                                         
                                         <th><b>Acción</b></th>
                                     </tr>
                                 </thead>
@@ -30,9 +31,19 @@
                                     {% for pais in paises %}
                                         <tr>
                                             <td>{{ pais.id }}</td>
-                                            <td>{{ pais.nombre_pais }}</td>                                            
+                                            <td>{{ pais.nombre_pais }}</td>
                                             <td>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;<a data-toggle="modal" data-target="#modificar" href="/modificar-pais/{{ pais.id }}/"><i class="fa fa-edit fa-lg"></i></a>
+                                                {% if pais.estatus_pais == True %}
+                                                    <span class="label label-primary">Activo</span>                                            
+                                                {% endif %}
+                                                {% if pais.estatus_pais == False %}
+                                                    <span class="label label-danger">Inactivo</span>
+                                                {% endif %}
+                                            </td>                                            
+                                            <td>
+                                            <a data-toggle="modal" data-target="#modificar" href="/modificar-pais/{{ pais.id }}/"><i class="fa fa-edit fa-lg"></i></a>
+                                            &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                                            <a data-toggle="modal" data-target="#estatus" href="/modificar-estatus-pais/{{ pais.id }}/"><i class="fa fa-ban fa-lg"></i></a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -75,6 +86,14 @@
                 </div>
 
                 <div class="modal fade" id="modificar" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" id="modal-box">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="estatus" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content" id="modal-box">
 

@@ -1,0 +1,41 @@
+{% load static %}
+<div class="modal-header">
+    <h4 class="modal-title">Modificar Estatus de la Película</h4>
+</div>
+<div class="modal-body">
+
+    <h3>Seleccione el estatus de la película</h3>
+
+    <h4>{{ pelicula.titulo_original }}</h4>
+    <br>
+
+    <div class="form-group row">
+        <div class="col-xs-6">
+            <form role="form" method="post" action="/modificar-estatus-pelicula/{{ pelicula.id }}/">{% csrf_token %}
+                <div class="form-group row">  
+                    <div class="col-xs-12">                      
+                        <button type="submit" class="btn btn-primary btn-md btn-block" name="activo"><i class="fa fa-check-square-o fa-lg"></i>&nbsp;&nbsp;&nbsp;Activo</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-xs-6">
+            <form role="form" method="post" action="/modificar-estatus-pelicula/{{ pelicula.id }}/">{% csrf_token %}
+                <div class="form-group row">  
+                    <div class="col-xs-12">                      
+                        <button type="submit" class="btn btn-danger btn-md btn-block" name="inactivo"><i class="fa fa-ban fa-lg"></i>&nbsp;&nbsp;&nbsp;Inactivo</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="form-group row">  
+        <div class="col-xs-12">                      
+            <a class="btn btn-info btn-md btn-block" href="/agregar-pelicula/">Volver</a>
+        </div>
+    </div>
+
+</div>
+<div class="modal-footer">
+</div>

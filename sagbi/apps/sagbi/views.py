@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 def index(request):
-	peliculas = Peliculas.objects.order_by("-id")[:4]
-	libros = Libros.objects.order_by("-id")[:4]
+	peliculas = Peliculas.objects.filter(estatus_pelicula=True).order_by("-id")[:4]
+	libros = Libros.objects.filter(estatus_libro=True).order_by("-id")[:4]
 	return render(request, 'index.html',{'peliculas' : peliculas, 'libros' : libros})
 
 
@@ -18,37 +18,37 @@ def peliculas(request):
 		peliculas = ''
 
 		if request.POST['pais'] == '0' and request.POST['director'] == '0':
-			peliculas = Peliculas.objects.filter(anio=request.POST['anio'])
+			peliculas = Peliculas.objects.filter(anio=request.POST['anio'], estatus_pelicula=True)
 			if len(peliculas) <= 0:
 				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
 
 		elif request.POST['anio'] == '' and request.POST['director'] == '0':
-			peliculas = Peliculas.objects.filter(pais=request.POST['pais'])
+			peliculas = Peliculas.objects.filter(pais=request.POST['pais'], estatus_pelicula=True)
 			if len(peliculas) <= 0:
 				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
 
 		elif request.POST['anio'] == '' and request.POST['pais'] == '0':
-			peliculas = Peliculas.objects.filter(director=request.POST['director'])
+			peliculas = Peliculas.objects.filter(director=request.POST['director'], estatus_pelicula=True)
 			if len(peliculas) <= 0:
 				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
 
 		elif request.POST['director'] == '0':
-			peliculas = Peliculas.objects.filter(pais=request.POST['pais'], anio=request.POST['anio'])
+			peliculas = Peliculas.objects.filter(pais=request.POST['pais'], anio=request.POST['anio'], estatus_pelicula=True)
 			if len(peliculas) <= 0:
 				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
 
 		elif request.POST['pais'] == '0':
-			peliculas = Peliculas.objects.filter(director=request.POST['director'], anio=request.POST['anio'])
+			peliculas = Peliculas.objects.filter(director=request.POST['director'], anio=request.POST['anio'], estatus_pelicula=True)
 			if len(peliculas) <= 0:
 				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
 
 		elif request.POST['anio'] == '':
-			peliculas = Peliculas.objects.filter(director=request.POST['director'], pais=request.POST['pais'])
+			peliculas = Peliculas.objects.filter(director=request.POST['director'], pais=request.POST['pais'], estatus_pelicula=True)
 			if len(peliculas) <= 0:
 				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
 
 		else:
-			peliculas = Peliculas.objects.filter(director=request.POST['director'], pais=request.POST['pais'], anio=request.POST['anio'])
+			peliculas = Peliculas.objects.filter(director=request.POST['director'], pais=request.POST['pais'], anio=request.POST['anio'], estatus_pelicula=True)
 			if len(peliculas) <= 0:
 				mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
 
@@ -75,7 +75,7 @@ def peliculas(request):
 		return render(request, 'peliculas.html',{'peliculas' : Contexto['modelo'], 'paginator': Contexto, 'paises' : paises, 'directores' : directores, 'mensaje' : mensaje})
 
 
-	peliculas = Peliculas.objects.order_by("-id")
+	peliculas = Peliculas.objects.filter(estatus_pelicula=True).order_by("-id")
 	result_list  =  Paginator(peliculas, 20)
 
 	try:
@@ -174,7 +174,7 @@ def libros(request):
 		mensaje = ''
 		libros = ''
 
-		libros = Libros.objects.filter(autor=request.POST['autor'])
+		libros = Libros.objects.filter(autor=request.POST['autor'], estatus_libro=True)
 		if len(libros) <= 0:
 			mensaje = 'No se han encontrado libros con esos parametros de busqueda.'
 
@@ -200,7 +200,7 @@ def libros(request):
 		return render(request, 'libros.html',{'libros' : Contexto['modelo'], 'paginator': Contexto, 'autores' : autores, 'mensaje' : mensaje})
 
 
-	libros = Libros.objects.order_by("-id")
+	libros = Libros.objects.filter(estatus_libro=True).order_by("-id")
 	result_list  =  Paginator(libros, 20)
 
 	try:
@@ -293,9 +293,9 @@ def busqueda_material(request):
 		mensaje = ''
 		mensaje2 = ''
 
-		peliculas = Peliculas.objects.filter(titulo_original__icontains=request.POST['busqueda_material'])
+		peliculas = Peliculas.objects.filter(titulo_original__icontains=request.POST['busqueda_material'], estatus_pelicula=True)
 
-		libros = Libros.objects.filter(titulo_libro__icontains=request.POST['busqueda_material'])
+		libros = Libros.objects.filter(titulo_libro__icontains=request.POST['busqueda_material'], estatus_libro=True)
 
 		if len(peliculas) <= 0:
 			mensaje = 'No se han encontrado peliculas con esos parametros de busqueda.'
@@ -350,6 +350,23 @@ def guardar_modificar_pais(request):
 	else:
 		return redirect('/inicio-sesion')
 
+@login_required()
+def modificar_estatus_pais(request, pais_id):
+	if request.method == 'POST':
+		pais = get_object_or_404(Paises, pk=pais_id)
+		if 'activo' in request.POST:		
+			pais.estatus_pais = True
+
+		if 'inactivo' in request.POST:
+			pais.estatus_pais = False
+
+		pais.save()
+		return redirect('/agregar-pais')
+
+	pais = get_object_or_404(Paises, pk=pais_id)
+
+	return render(request, 'panel/modificar_estatus_pais.html',{'pais' : pais})
+
 
 @login_required()
 def agregar_director(request):
@@ -384,6 +401,23 @@ def guardar_modificar_director(request):
 			return HttpResponse('<div class="alert alert-success text-center" role="alert"><b>Director modificado exitosamente.</b></div>')
 	else:
 		return redirect('/inicio-sesion')
+
+@login_required()
+def modificar_estatus_director(request, director_id):
+	if request.method == 'POST':
+		director = get_object_or_404(Directores, pk=director_id)
+		if 'activo' in request.POST:		
+			director.estatus_director = True
+
+		if 'inactivo' in request.POST:
+			director.estatus_director = False
+
+		director.save()
+		return redirect('/agregar-director')
+
+	director = get_object_or_404(Directores, pk=director_id)
+
+	return render(request, 'panel/modificar_estatus_director.html',{'director' : director})
 
 
 @login_required()
@@ -420,15 +454,15 @@ def agregar_pelicula(request):
 			pelicula.save()
 
 	peliculas = Peliculas.objects.order_by("-id")
-	paises = Paises.objects.order_by("-id")
-	directores = Directores.objects.order_by("-id")
+	paises = Paises.objects.filter(estatus_pais=True).order_by("-id")
+	directores = Directores.objects.filter(estatus_director=True).order_by("-id")
 	return render(request, 'panel/agregar_pelicula.html',{'peliculas' : peliculas, 'paises' : paises, 'directores' : directores, 'mensaje' : mensaje})
 
 @login_required()
 def modificar_pelicula(request, pelicula_id):
 	pelicula = get_object_or_404(Peliculas, pk=pelicula_id)
-	paises = Paises.objects.order_by("-id")
-	directores = Directores.objects.order_by("-id")
+	paises = Paises.objects.filter(estatus_pais=True).order_by("-id")
+	directores = Directores.objects.filter(estatus_director=True).order_by("-id")
 
 	return render(request, 'panel/modificar_pelicula.html',{'pelicula' : pelicula, 'paises' : paises, 'directores' : directores})
 
@@ -492,13 +526,29 @@ def guardar_modificar_pelicula(request):
 			mensaje = 'La Película ha sido modificada exitosamente.'
 
 		peliculas = Peliculas.objects.order_by("-id")
-		paises = Paises.objects.order_by("-id")
-		directores = Directores.objects.order_by("-id")
+		paises = Paises.objects.filter(estatus_pais=True).order_by("-id")
+		directores = Directores.objects.filter(estatus_director=True).order_by("-id")
 		return render(request, 'panel/agregar_pelicula.html',{'peliculas' : peliculas, 'paises' : paises, 'directores' : directores, 'mensaje' : mensaje})
 
 	else:
 		return redirect('/inicio-sesion')
 
+@login_required()
+def modificar_estatus_pelicula(request, pelicula_id):
+	if request.method == 'POST':
+		pelicula = get_object_or_404(Peliculas, pk=pelicula_id)
+		if 'activo' in request.POST:		
+			pelicula.estatus_pelicula = True
+
+		if 'inactivo' in request.POST:
+			pelicula.estatus_pelicula = False
+
+		pelicula.save()
+		return redirect('/agregar-pelicula')
+
+	pelicula = get_object_or_404(Peliculas, pk=pelicula_id)
+
+	return render(request, 'panel/modificar_estatus_pelicula.html',{'pelicula' : pelicula})
 
 @login_required()
 def agregar_autor(request):
@@ -536,6 +586,24 @@ def guardar_modificar_autor(request):
 
 
 @login_required()
+def modificar_estatus_autor(request, autor_id):
+	if request.method == 'POST':
+		autor = get_object_or_404(Autores, pk=autor_id)
+		if 'activo' in request.POST:		
+			autor.estatus_autor = True
+
+		if 'inactivo' in request.POST:
+			autor.estatus_autor = False
+
+		autor.save()
+		return redirect('/agregar-autor')
+
+	autor = get_object_or_404(Autores, pk=autor_id)
+
+	return render(request, 'panel/modificar_estatus_autor.html',{'autor' : autor})
+
+
+@login_required()
 def agregar_libro(request):
 	mensaje = ''
 	if request.method == 'POST':
@@ -558,14 +626,14 @@ def agregar_libro(request):
 
 			libro.save()
 
-	autores = Autores.objects.order_by("-id")
+	autores = Autores.objects.filter(estatus_autor=True).order_by("-id")
 	libros = Libros.objects.order_by("-id")
 	return render(request, 'panel/agregar_libro.html',{'libros' : libros, 'autores' : autores, 'mensaje' : mensaje})
 
 @login_required()
 def modificar_libro(request, libro_id):
 	libro = get_object_or_404(Libros, pk=libro_id)
-	autores = Autores.objects.order_by("-id")
+	autores = Autores.objects.filter(estatus_autor=True).order_by("-id")
 	return render(request, 'panel/modificar_libro.html',{'libro' : libro, 'autores' : autores})
 
 @login_required()
@@ -615,9 +683,26 @@ def guardar_modificar_libro(request):
 
 			mensaje = 'El libro ha sido modificado exitosamente.'
 
-		autores = Autores.objects.order_by("-id")
+		autores = Autores.objects.filter(estatus_autor=True).order_by("-id")
 		libros = Libros.objects.order_by("-id")
 		return render(request, 'panel/agregar_libro.html',{'libros' : libros, 'autores' : autores, 'mensaje' : mensaje})
 
 	else:
 		return redirect('/inicio-sesion')
+
+@login_required()
+def modificar_estatus_libro(request, libro_id):
+	if request.method == 'POST':
+		libro = get_object_or_404(Libros, pk=libro_id)
+		if 'activo' in request.POST:		
+			libro.estatus_libro = True
+
+		if 'inactivo' in request.POST:
+			libro.estatus_libro = False
+
+		libro.save()
+		return redirect('/agregar-libro')
+
+	libro = get_object_or_404(Libros, pk=libro_id)
+
+	return render(request, 'panel/modificar_estatus_libro.html',{'libro' : libro})

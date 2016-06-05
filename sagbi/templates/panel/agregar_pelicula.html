@@ -29,6 +29,7 @@
                                     <tr>
                                         <th><b>N°</b></th>
                                         <th><b>Película</b></th>
+                                        <th><b>Estatus</b></th>
                                         <th><b>Acción</b></th>
                                     </tr>
                                 </thead>
@@ -36,9 +37,19 @@
                                     {% for pelicula in peliculas %}
                                         <tr>
                                             <td>{{ pelicula.id }}</td>
-                                            <td>{{ pelicula.titulo_original }}</td>                                            
+                                            <td>{{ pelicula.titulo_original }}</td>
                                             <td>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;<a data-toggle="modal" data-target="#modificar" href="/modificar-pelicula/{{ pelicula.id }}/"><i class="fa fa-edit fa-lg"></i></a>
+                                                {% if pelicula.estatus_pelicula == True %}
+                                                    <span class="label label-primary">Activo</span>                                            
+                                                {% endif %}
+                                                {% if pelicula.estatus_pelicula == False %}
+                                                    <span class="label label-danger">Inactivo</span>
+                                                {% endif %}
+                                            </td>                                             
+                                            <td>
+                                            <a data-toggle="modal" data-target="#modificar" href="/modificar-pelicula/{{ pelicula.id }}/"><i class="fa fa-edit fa-lg"></i></a>
+                                            &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                                            <a data-toggle="modal" data-target="#estatus" href="/modificar-estatus-pelicula/{{ pelicula.id }}/"><i class="fa fa-ban fa-lg"></i></a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -163,6 +174,14 @@
                 <div class="modal fade" id="modificar" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="estatus" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" id="modal-box">
 
                         </div>
                     </div>

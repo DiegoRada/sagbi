@@ -28,6 +28,7 @@
                                     <tr>
                                         <th><b>N°</b></th>
                                         <th><b>Libro</b></th>
+                                        <th><b>Estatus</b></th> 
                                         <th><b>Acción</b></th>
                                     </tr>
                                 </thead>
@@ -35,9 +36,20 @@
                                     {% for libro in libros %}
                                         <tr>
                                             <td>{{ libro.id }}</td>
-                                            <td>{{ libro.titulo_libro }}</td>                                            
+                                            <td>{{ libro.titulo_libro }}</td>
                                             <td>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;<a data-toggle="modal" data-target="#modificar" href="/modificar-libro/{{ libro.id }}/"><i class="fa fa-edit fa-lg"></i></a>
+                                                {% if libro.estatus_libro == True %}
+                                                    <span class="label label-primary">Activo</span>                                            
+                                                {% endif %}
+                                                {% if libro.estatus_libro == False %}
+                                                    <span class="label label-danger">Inactivo</span>
+                                                {% endif %}
+                                            </td>                                            
+                                            <td>                                            
+                                            <td>
+                                            <a data-toggle="modal" data-target="#modificar" href="/modificar-libro/{{ libro.id }}/"><i class="fa fa-edit fa-lg"></i></a>
+                                            &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                                            <a data-toggle="modal" data-target="#estatus" href="/modificar-estatus-libro/{{ libro.id }}/"><i class="fa fa-ban fa-lg"></i></a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -126,6 +138,14 @@
                 <div class="modal fade" id="modificar" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="estatus" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" id="modal-box">
 
                         </div>
                     </div>

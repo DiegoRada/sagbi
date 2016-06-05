@@ -36,6 +36,8 @@ class Peliculas(models.Model):
 	productora = models.CharField(max_length=150,null=True)
 	sinopsis = models.TextField(max_length=800,null=True)
 	criticas = models.TextField(max_length=1300,null=True)
+
+	estatus_pelicula = models.BooleanField(default=True)
 	
 	pelicula_digital = models.FileField(upload_to='peliculas/')
 	pelicula_afiche = models.FileField(upload_to='peliculas/',null=True)
@@ -79,6 +81,8 @@ class Libros(models.Model):
 	edicion = models.CharField(max_length=100,null=True)
 	publicacion = models.CharField(max_length=100,null=True)
 	descripcion = models.TextField(max_length=1000,null=True)
+
+	estatus_libro = models.BooleanField(default=True)
 	
 	libro_digital = models.FileField(upload_to='libros/')
 	libro_afiche = models.FileField(upload_to='libros/',null=True)
