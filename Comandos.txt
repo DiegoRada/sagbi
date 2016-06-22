@@ -1,0 +1,12 @@
+python manage.py runserver --settings=sagbi.settings.local
+
+python manage.py makemigrations --settings=sagbi.settings.local
+
+python manage.py migrate --settings=sagbi.settings.local
+
+django-admin.py createsuperuser --settings=sagbi.settings.local
+
+django-admin startproject nombreproyecto
+
+python manage.py shell --settings=sagbi.settings.local
+
