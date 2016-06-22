@@ -522,13 +522,8 @@ def guardar_modificar_pelicula(request):
 				pelicula_archivo.pelicula_ficha = request.FILES.get('pelicula_ficha_modificar', '')			
 
 			pelicula_archivo.save()
-
-			mensaje = 'La Película ha sido modificada exitosamente.'
-
-		peliculas = Peliculas.objects.order_by("-id")
-		paises = Paises.objects.filter(estatus_pais=True).order_by("-id")
-		directores = Directores.objects.filter(estatus_director=True).order_by("-id")
-		return render(request, 'panel/agregar_pelicula.html',{'peliculas' : peliculas, 'paises' : paises, 'directores' : directores, 'mensaje' : mensaje})
+		
+		return redirect('/agregar-pelicula')
 
 	else:
 		return redirect('/inicio-sesion')
@@ -681,11 +676,7 @@ def guardar_modificar_libro(request):
 
 			libro_archivo.save()
 
-			mensaje = 'El libro ha sido modificado exitosamente.'
-
-		autores = Autores.objects.filter(estatus_autor=True).order_by("-id")
-		libros = Libros.objects.order_by("-id")
-		return render(request, 'panel/agregar_libro.html',{'libros' : libros, 'autores' : autores, 'mensaje' : mensaje})
+		return redirect('/agregar-libro')
 
 	else:
 		return redirect('/inicio-sesion')
